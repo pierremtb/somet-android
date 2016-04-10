@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -142,8 +142,7 @@ public class MainActivity extends AppCompatActivity
     public void onConnect(final boolean signedInAutomatically) {
 
         if (signedInAutomatically) {
-        }
-        else {
+        } else {
 
             // sign in to the server
             mMeteor.loginWithUsername("trainer1", "etis", new ResultListener() {
@@ -159,12 +158,12 @@ public class MainActivity extends AppCompatActivity
             });
         }
         // subscribe to data from the server
-        String subscriptionId = mMeteor.subscribe("athletesOfCurrentUser", new Object[] {} ,new SubscribeListener() {
+        String subscriptionId = mMeteor.subscribe("athletesOfCurrentUser", new Object[]{}, new SubscribeListener() {
 
             public void onSuccess() {
             }
 
-           public void onError(String error, String reason, String details) {
+            public void onError(String error, String reason, String details) {
             }
         });
 
@@ -173,14 +172,14 @@ public class MainActivity extends AppCompatActivity
             public void onSuccess() {
                 Document User = mMeteor.getDatabase().getCollection("users").getDocument(mMeteor.getUserId());
 
-                TextView username = (TextView)findViewById(R.id.username);
-                TextView cn = (TextView)findViewById(R.id.completeName);
+                TextView username = (TextView) findViewById(R.id.username);
+                TextView cn = (TextView) findViewById(R.id.completeName);
 
-                String usr = (String)User.getField("username");
-                HashMap<String, Object> profile = (HashMap<String,Object>) User.getField("profile");
+                String usr = (String) User.getField("username");
+                HashMap<String, Object> profile = (HashMap<String, Object>) User.getField("profile");
 
                 username.setText(usr);
-                cn.setText((String)profile.get("complete_name"));
+                cn.setText((String) profile.get("complete_name"));
             }
 
             @Override
