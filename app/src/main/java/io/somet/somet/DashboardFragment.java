@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import im.delight.android.ddp.Meteor;
+import im.delight.android.ddp.MeteorSingleton;
+import im.delight.android.ddp.SubscribeListener;
+import im.delight.android.ddp.db.Document;
 
 public class DashboardFragment extends Fragment {
 
@@ -24,6 +27,37 @@ public class DashboardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Main.toast((String) Main.getUser().get("username"));
+        /*
+        MeteorSingleton.getInstance().subscribe("getUserData", new Object[]{}, new SubscribeListener() {
+            @Override
+            public void onSuccess() {
+                Document user_doc = MeteorSingleton.getInstance().getDatabase().getCollection("users").getDocument(MeteorSingleton.getInstance().getUserId());
+                Main.toast("singletoneyy @" + user_doc.getField("username") + ".");
+            }
+
+            @Override
+            public void onError(String error, String reason, String details) {
+
+            }
+        });*/
+
+        String usr = (String) Main.getUser().get("username");
+        System.out.println(usr);
+        MeteorSingleton.getInstance().subscribe("getUserData", new Object[]{}, new SubscribeListener() {
+            @Override
+            public void onSuccess() {
+                Integer wk = MeteorSingleton.getInstance().getDatabase().getCollection("users").count();
+                System.out.println(wk);
+                /*try{
+                    Main.toast("singletoneyy @" + wk.getField("title") + ".");
+                } catch (Exception e) {}*/
+            }
+
+            @Override
+            public void onError(String error, String reason, String details) {
+
+            }
+        });
 
     }
 

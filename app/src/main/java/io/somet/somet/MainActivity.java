@@ -28,6 +28,7 @@ import java.util.HashMap;
 
 import im.delight.android.ddp.Meteor;
 import im.delight.android.ddp.MeteorCallback;
+import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.SubscribeListener;
 import im.delight.android.ddp.db.Document;
 import im.delight.android.ddp.db.memory.InMemoryDatabase;
@@ -35,8 +36,8 @@ import im.delight.android.ddp.db.memory.InMemoryDatabase;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MeteorCallback, DashboardFragment.OnFragmentInteractionListener {
 
-    private Meteor mMeteor;
     private static final int REQUEST_LOGIN = 0;
+    public Meteor meteor;
     private HashMap<String, Object> User = new HashMap<>();
 
     @Override
@@ -66,9 +67,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mMeteor = new Meteor(this, "ws://somet.herokuapp.com/websocket", new InMemoryDatabase());
-        mMeteor.addCallback(this);
-        mMeteor.connect();
+        meteor = MeteorSingleton.createInstance(this, "ws://somet.herokuapp.com/websocket", new InMemoryDatabase());
+        meteor.addCallback(this);
+        meteor.connect();
     }
 
     @Override
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity
             toast("S");
 
         }else if (id == R.id.nav_logout) {
-            mMeteor.logout();
+            meteor.logout();
             launchLogin();
         }
 
@@ -183,8 +184,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDestroy() {
-        mMeteor.disconnect();
-        mMeteor.removeCallback(this);
+        meteor.disconnect();
+        meteor.removeCallback(this);
 
         super.onDestroy();
     }
@@ -218,10 +219,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void prepareBoard() {
-        mMeteor.subscribe("getUserData", new Object[]{}, new SubscribeListener() {
+        meteor.subscribe("getUserData", new Object[]{}, new SubscribeListener() {
             @Override
             public void onSuccess() {
-                Document user_doc = mMeteor.getDatabase().getCollection("users").getDocument(mMeteor.getUserId());
+                Document user_doc = meteor.getDatabase().getCollection("users").getDocument(meteor.getUserId());
                 User.put("profile", user_doc.getField("profile"));
                 User.put("username", user_doc.getField("username"));
                 System.out.println(User);
@@ -236,7 +237,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
-
+    
     public HashMap<String, Object> getUser() {
         return User;
     }
