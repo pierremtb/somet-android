@@ -1,8 +1,23 @@
 <resources>
+    <!-- Global -->
     <string name="app_name">Somet</string>
 
+    <!-- Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_workouts">Entrainements</string>
+    <string name="nav_plans">Plans</string>
+    <string name="nav_events">Events</string>
+    <string name="nav_calendar">Calendrier</string>
+    <string name="nav_analysis">Analyse</string>
+    <string name="nav_account">Déconnexion</string>
+    <string name="nav_settings">Paramètres</string>
+    <string name="nav_logout">Déconnexion</string>
 
     <string name="action_about">About</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_last_wk_title">Dernier entrainement</string>
+    <string name="dashboard_this_week_pl_title">Plan de la semaine</string>
 </resources>

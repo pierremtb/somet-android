@@ -1,47 +1,43 @@
 package io.somet.somet;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.io.InputStream;
+import java.util.HashMap;
 
 import im.delight.android.ddp.Meteor;
 import im.delight.android.ddp.MeteorCallback;
-import im.delight.android.ddp.ResultListener;
 import im.delight.android.ddp.SubscribeListener;
-import im.delight.android.ddp.db.Collection;
-import im.delight.android.ddp.db.Database;
 import im.delight.android.ddp.db.Document;
 import im.delight.android.ddp.db.memory.InMemoryDatabase;
 
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MeteorCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, MeteorCallback, DashboardFragment.OnFragmentInteractionListener {
 
     private Meteor mMeteor;
+    private static final int REQUEST_LOGIN = 0;
+    private HashMap<String, Object> User = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +46,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +55,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -68,15 +66,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // create a new instance
         mMeteor = new Meteor(this, "ws://somet.herokuapp.com/websocket", new InMemoryDatabase());
-
-        // register the callback that will handle events and receive messages
         mMeteor.addCallback(this);
-
-        // establish the connection
         mMeteor.connect();
-
     }
 
     @Override
@@ -114,23 +106,31 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_dashboard) {
-            // Handle the camera action
+            showDashboard();
         } else if (id == R.id.nav_workouts) {
+            toast("Workouts");
 
         } else if (id == R.id.nav_plans) {
+            toast("P");
 
         } else if (id == R.id.nav_events) {
+            toast("E");
 
         } else if (id == R.id.nav_calendar) {
+            toast("C");
 
         } else if (id == R.id.nav_analysis) {
+            toast("A");
 
         } else if (id == R.id.nav_settings) {
+            toast("S");
 
+        }else if (id == R.id.nav_logout) {
+            mMeteor.logout();
+            launchLogin();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -140,57 +140,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnect(final boolean signedInAutomatically) {
-
         if (signedInAutomatically) {
+            prepareBoard();
         } else {
-
-            // sign in to the server
-            mMeteor.loginWithUsername("trainer1", "etis", new ResultListener() {
-
-                @Override
-                public void onSuccess(String result) {
-                }
-
-                @Override
-                public void onError(String error, String reason, String details) {
-                }
-
-            });
+            launchLogin();
         }
-        // subscribe to data from the server
-        String subscriptionId = mMeteor.subscribe("athletesOfCurrentUser", new Object[]{}, new SubscribeListener() {
-
-            public void onSuccess() {
-            }
-
-            public void onError(String error, String reason, String details) {
-            }
-        });
-
-        mMeteor.subscribe("getUserData", new Object[]{}, new SubscribeListener() {
-            @Override
-            public void onSuccess() {
-                Document User = mMeteor.getDatabase().getCollection("users").getDocument(mMeteor.getUserId());
-
-                TextView username = (TextView) findViewById(R.id.username);
-                TextView cn = (TextView) findViewById(R.id.completeName);
-
-                String usr = (String) User.getField("username");
-                HashMap<String, Object> profile = (HashMap<String, Object>) User.getField("profile");
-
-                username.setText(usr);
-                cn.setText((String) profile.get("complete_name"));
-            }
-
-            @Override
-            public void onError(String error, String reason, String details) {
-
-            }
-        });
-
-        // call an arbitrary methodDatabase database = mMeteor.getDatabase();
-
-        mMeteor.call("myMethod");
     }
 
     @Override
@@ -219,15 +173,96 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != RESULT_CANCELED) {
+            if (requestCode == REQUEST_LOGIN) {
+                prepareBoard();
+            }
+        }
+    }
+
+    @Override
     public void onDestroy() {
         mMeteor.disconnect();
         mMeteor.removeCallback(this);
-        // or
-        // mMeteor.removeCallbacks();
-
-        // ...
 
         super.onDestroy();
     }
 
+    public void showDashboard() {
+        Fragment DashboardFG = new DashboardFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame, DashboardFG);
+        ft.commit();
+    }
+
+    public void launchLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivityForResult(intent, REQUEST_LOGIN);
+    }
+
+    @Override
+    public void toast(String str) {
+        Context context = getApplicationContext();
+        CharSequence text = str;
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+    public void setDrawerData() {
+        TextView username = (TextView) findViewById(R.id.username);
+        TextView cn = (TextView) findViewById(R.id.completeName);
+        username.setText((String) User.get("username"));
+        cn.setText((String) ((HashMap<String, Object>) User.get("profile")).get("complete_name"));
+    }
+
+    public void prepareBoard() {
+        mMeteor.subscribe("getUserData", new Object[]{}, new SubscribeListener() {
+            @Override
+            public void onSuccess() {
+                Document user_doc = mMeteor.getDatabase().getCollection("users").getDocument(mMeteor.getUserId());
+                User.put("profile", user_doc.getField("profile"));
+                User.put("username", user_doc.getField("username"));
+                System.out.println(User);
+                setDrawerData();
+                toast("Bienvenue @" + user_doc.getField("username") + ".");
+                showDashboard();
+            }
+
+            @Override
+            public void onError(String error, String reason, String details) {
+
+            }
+        });
+    }
+
+    public HashMap<String, Object> getUser() {
+        return User;
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 }

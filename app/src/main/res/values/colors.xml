@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#263238</color>
+    <color name="colorPrimary">#37474F</color>
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="ripple_accent">#80e91e63</color>
+    <color name="cardsbg">#ffffff</color>
+    <color name="transparent">#00ffffff</color>
+    <color name="divider_grey">#d4d4d4</color>
+
+    <!-- Color for Backgrounds -->
+    <color name="light_bg">#fafafa</color>
+
+    <!-- Color for some ripples -->
+    <color name="semitransparent_white">#80ffffff</color>
 </resources>
