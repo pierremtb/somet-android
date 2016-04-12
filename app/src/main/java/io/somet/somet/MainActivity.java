@@ -19,11 +19,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import im.delight.android.ddp.Meteor;
@@ -32,13 +38,20 @@ import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.SubscribeListener;
 import im.delight.android.ddp.db.Document;
 import im.delight.android.ddp.db.memory.InMemoryDatabase;
+import io.somet.somet.dummy.DummyContent;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MeteorCallback, DashboardFragment.OnFragmentInteractionListener {
+public class MainActivity
+        extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+            MeteorCallback,
+            DashboardFragment.OnFragmentInteractionListener,
+            WorkoutsFragment.OnListFragmentInteractionListener{
 
     private static final int REQUEST_LOGIN = 0;
     public Meteor meteor;
     private HashMap<String, Object> User = new HashMap<>();
+
+    public MaterialDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +83,12 @@ public class MainActivity extends AppCompatActivity
         meteor = MeteorSingleton.createInstance(this, "ws://somet.herokuapp.com/websocket", new InMemoryDatabase());
         meteor.addCallback(this);
         meteor.connect();
+
+        loadingDialog = new MaterialDialog.Builder(this)
+                .title(R.string.progress_dialog)
+                .content(R.string.please_wait)
+                .progress(true, 0)
+                .show();
     }
 
     @Override
@@ -112,22 +131,21 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_dashboard) {
             showDashboard();
         } else if (id == R.id.nav_workouts) {
-            toast("Workouts");
-
+            getSupportActionBar().setTitle("Entrainements");
+            showWorkouts();
         } else if (id == R.id.nav_plans) {
-            toast("P");
+            getSupportActionBar().setTitle("Plans");
 
         } else if (id == R.id.nav_events) {
-            toast("E");
+            getSupportActionBar().setTitle("Événements");
 
         } else if (id == R.id.nav_calendar) {
-            toast("C");
+            getSupportActionBar().setTitle("Calendrier");
 
         } else if (id == R.id.nav_analysis) {
-            toast("A");
+            getSupportActionBar().setTitle("Analyse");
 
         } else if (id == R.id.nav_settings) {
-            toast("S");
 
         }else if (id == R.id.nav_logout) {
             meteor.logout();
@@ -197,12 +215,26 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
+    public void showWorkouts() {
+        Fragment WorkoutsFG = new WorkoutsFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame, WorkoutsFG);
+        ft.commit();
+    }
+
     public void launchLogin() {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivityForResult(intent, REQUEST_LOGIN);
     }
 
-    @Override
+    public void openWorkout(Object id) {
+        Intent intent = new Intent(getApplicationContext(), WorkoutActivity.class);
+        Bundle b = new Bundle();
+        b.putString("id", id.toString());
+        intent.putExtras(b);
+        startActivityForResult(intent, 0);
+    }
+
     public void toast(String str) {
         Context context = getApplicationContext();
         CharSequence text = str;
@@ -214,8 +246,8 @@ public class MainActivity extends AppCompatActivity
     public void setDrawerData() {
         TextView username = (TextView) findViewById(R.id.username);
         TextView cn = (TextView) findViewById(R.id.completeName);
-        username.setText((String) User.get("username"));
-        cn.setText((String) ((HashMap<String, Object>) User.get("profile")).get("complete_name"));
+        setText(R.id.username,User.get("username"));
+        setText(R.id.completeName ,((HashMap<String, Object>) User.get("profile")).get("complete_name"));
     }
 
     public void prepareBoard() {
@@ -229,6 +261,7 @@ public class MainActivity extends AppCompatActivity
                 setDrawerData();
                 toast("Bienvenue @" + user_doc.getField("username") + ".");
                 showDashboard();
+                loadingDialog.dismiss();
             }
 
             @Override
@@ -237,9 +270,51 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
-    
+
+    public void setText(Integer id, Object txt) {
+        try {
+            ((TextView) findViewById(id)).setText(txt.toString());
+        } catch (Exception e ) {}
+    }
+
+    public static HashMap<String, Object> getMap(Document doc) {
+        HashMap<String, Object> obj = new HashMap<>();
+        for (String f : doc.getFieldNames()) {
+            obj.put(f, doc.getField(f));
+        }
+        obj.put("_id", doc.getId());
+        return obj;
+    }
+
+    public static String dispDuration(Object str) {
+        int sec = 0;
+        try{
+            sec = Integer.parseInt(str.toString());
+        } catch (NumberFormatException e) {
+            //Will Throw exception!
+            //do something! anything to handle the exception.
+        }
+        return String.format("%02d:%02d:%02d", sec / 3600, (sec % 3600) / 60, sec % 60);
+    }
+
+    public static String dispDate(Object str) {
+        HashMap<String, Long> t = (HashMap<String, Long>) str;
+        long timestamp = 0;
+        try {
+            timestamp = t.get("$date");
+        } catch (Exception e ) {}
+        Date date = new Date(timestamp);
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return formatter.format(date);
+    }
+
     public HashMap<String, Object> getUser() {
         return User;
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

@@ -1,6 +1,9 @@
 <resources>
     <!-- Global -->
     <string name="app_name">Somet</string>
+    <string name="loading_text">Chargement…</string>
+    <string name="more">MORE</string>
+    <string name="more_details">DETAILS</string>
 
     <!-- Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -20,4 +23,11 @@
     <!-- Dashboard -->
     <string name="dashboard_last_wk_title">Dernier entrainement</string>
     <string name="dashboard_this_week_pl_title">Plan de la semaine</string>
+    <string name="title_activity_workout">WorkoutActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- Dialogs -->
+    <string name="progress_dialog">Chargement</string>
+    <string name="please_wait">Patientez…</string>
 </resources>

@@ -16,11 +16,20 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" android:theme="@style/AppTheme.Connecting" />
-        <activity android:name=".SignupActivity" android:theme="@style/AppTheme.Connecting" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.Connecting" />
+        <activity
+            android:name=".SignupActivity"
+            android:theme="@style/AppTheme.Connecting" />
+        <activity
+            android:name=".WorkoutActivity"
+            android:label="@string/title_activity_workout"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
