@@ -1,8 +1,6 @@
 package io.somet.somet;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,15 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
-import im.delight.android.ddp.Meteor;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.SubscribeListener;
-import im.delight.android.ddp.db.Document;
 
 public class DashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -94,14 +87,17 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         HashMap<String, Object> getUser();
         void setText(Integer id, Object txt);
         void openWorkout(Object id);
+        boolean isTrainer();
     }
 
     public void setLastWkCard() {
-        last_wk = MainActivity.getMap(MeteorSingleton.getInstance().getDatabase().getCollection("workouts").findOne());
-        System.out.println(last_wk);
-        Main.setText(R.id.lastWkTitle, last_wk.get("title"));
-        Main.setText(R.id.lastWkDescription, last_wk.get("description"));
-        Main.setText(R.id.lastWkDuration, MainActivity.dispDuration(last_wk.get("duration")));
-        Main.setText(R.id.lastWkDate, MainActivity.dispDate(last_wk.get("start_date")));
+        if(!Main.isTrainer()) {
+            last_wk = MainActivity.getMap(MeteorSingleton.getInstance().getDatabase().getCollection("workouts").findOne());
+            System.out.println(last_wk);
+            Main.setText(R.id.lastWkTitle, last_wk.get("title"));
+            Main.setText(R.id.lastWkDescription, last_wk.get("description"));
+            Main.setText(R.id.lastWkDuration, MainActivity.dispDuration(last_wk.get("duration")));
+            Main.setText(R.id.lastWkDate, MainActivity.dispDate(last_wk.get("start_date")));
+        }
     }
 }

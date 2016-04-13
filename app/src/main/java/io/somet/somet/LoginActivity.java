@@ -7,15 +7,19 @@ import android.util.Log;
 
 import android.content.Intent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import im.delight.android.ddp.Meteor;
 import im.delight.android.ddp.MeteorCallback;
+import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 import im.delight.android.ddp.db.memory.InMemoryDatabase;
 
@@ -24,17 +28,20 @@ public class LoginActivity extends AppCompatActivity implements MeteorCallback {
     private static final int REQUEST_SIGNUP = 0;
 
     private Meteor mMeteor;
+    public MaterialDialog loadingDialog;
 
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_login) Button _loginButton;
-    @InjectView(R.id.link_signup) TextView _signupLink;
+    @InjectView(R.id.btn_go_signup) Button _signupLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
+
+        _emailText.clearFocus();
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -53,10 +60,6 @@ public class LoginActivity extends AppCompatActivity implements MeteorCallback {
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
-
-        mMeteor = new Meteor(this, "ws://somet.herokuapp.com/websocket", new InMemoryDatabase());
-        mMeteor.addCallback(this);
-        mMeteor.connect();
     }
 
     public void login() {
@@ -69,11 +72,10 @@ public class LoginActivity extends AppCompatActivity implements MeteorCallback {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
+        loadingDialog = new MaterialDialog.Builder(this)
+                .content(R.string.please_wait)
+                .progress(true, 0)
+                .show();
 
         final String email = _emailText.getText().toString();
         final String password = _passwordText.getText().toString();
@@ -84,7 +86,7 @@ public class LoginActivity extends AppCompatActivity implements MeteorCallback {
                 new Runnable() {
                     public void run() {
                         if(email.contains("@") && email.contains(".")) {
-                            mMeteor.loginWithEmail(email, password, new ResultListener() {
+                            MeteorSingleton.getInstance().loginWithEmail(email, password, new ResultListener() {
                                 @Override
                                 public void onSuccess(String result) {
                                     onLoginSuccess();
@@ -96,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements MeteorCallback {
                                 }
                             });
                         } else {
-                            mMeteor.loginWithUsername(email, password, new ResultListener() {
+                            MeteorSingleton.getInstance().loginWithUsername(email, password, new ResultListener() {
                                 @Override
                                 public void onSuccess(String result) {
                                     onLoginSuccess();
@@ -108,7 +110,6 @@ public class LoginActivity extends AppCompatActivity implements MeteorCallback {
                                 }
                             });
                         }
-                        progressDialog.dismiss();
                     }
                 }, 3000);
     }
@@ -137,37 +138,18 @@ public class LoginActivity extends AppCompatActivity implements MeteorCallback {
         Intent intent = getIntent();
         System.out.println("success");
         setResult(RESULT_OK, intent);
+        loadingDialog.dismiss();
         finish();
     }
 
     public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
+        loadingDialog.dismiss();
     }
 
     public boolean validate() {
         boolean valid = true;
-
-        /*
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
-
-
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
-            valid = false;
-        } else {
-            _emailText.setError(null);
-        }
-
-
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
-            valid = false;
-        } else {
-            _passwordText.setError(null);
-        }
-        */
 
         return valid;
     }

@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottomBarDashboard"
+        android:icon="@drawable/ic_dashboard"
+        android:title="@string/nav_dashboard" />
+
+    <item
+        android:id="@+id/bottomBarCalendar"
+        android:icon="@drawable/ic_event"
+        android:title="@string/nav_calendar" />
+
+    <item
+        android:id="@+id/bottomBarAnalysis"
+        android:icon="@drawable/ic_trending_up"
+        android:title="@string/nav_analysis" />
+
+    <item
+        android:id="@+id/bottomBarProfile"
+        android:icon="@drawable/ic_account_circle"
+        android:title="@string/nav_profile" />
+
+</menu>

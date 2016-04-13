@@ -2,7 +2,7 @@
     <!-- Global -->
     <string name="app_name">Somet</string>
     <string name="loading_text">Chargement…</string>
-    <string name="more">MORE</string>
+    <string name="more">PLUS</string>
     <string name="more_details">DETAILS</string>
 
     <!-- Drawer -->
@@ -17,6 +17,7 @@
     <string name="nav_account">Déconnexion</string>
     <string name="nav_settings">Paramètres</string>
     <string name="nav_logout">Déconnexion</string>
+    <string name="nav_profile">Profile</string>
 
     <string name="action_about">About</string>
 
@@ -30,4 +31,14 @@
     <!-- Dialogs -->
     <string name="progress_dialog">Chargement</string>
     <string name="please_wait">Patientez…</string>
+
+    <!-- Dialogs -->
+    <string name="graph_elevation_title">Altitude</string>
+    <string name="graph_cadence_title">Cadence</string>
+    <string name="graph_power_title">Puissance</string>
+    <string name="graph_heart_rate_title">Fréquence cardiaque</string>
+    <string name="graph_speed_title">Vitesse</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -8,27 +8,31 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
+import android.os.PersistableBundle;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -38,20 +42,29 @@ import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.SubscribeListener;
 import im.delight.android.ddp.db.Document;
 import im.delight.android.ddp.db.memory.InMemoryDatabase;
-import io.somet.somet.dummy.DummyContent;
 
 public class MainActivity
         extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-            MeteorCallback,
+        implements MeteorCallback,
             DashboardFragment.OnFragmentInteractionListener,
-            WorkoutsFragment.OnListFragmentInteractionListener{
+            CalendarFragment.OnFragmentInteractionListener,
+            AnalysisFragment.OnFragmentInteractionListener,
+            ProfileFragment.OnFragmentInteractionListener,
+            ActionBar.OnNavigationListener{
 
     private static final int REQUEST_LOGIN = 0;
     public Meteor meteor;
     private HashMap<String, Object> User = new HashMap<>();
 
     public MaterialDialog loadingDialog;
+    private BottomBar mBottomBar;
+
+    public ActionBar actionBar;
+    public boolean isTrainer = false;
+
+    public boolean isTrainer() {
+        return isTrainer;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +72,35 @@ public class MainActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+
+        mBottomBar = BottomBar.attach(this, savedInstanceState);
+        mBottomBar.setItemsFromMenu(R.menu.bottom_bar_menu, new OnMenuTabClickListener() {
+            @Override
+            public void onMenuTabSelected(@IdRes int menuItemId) {
+                switch (menuItemId) {
+                    case R.id.bottomBarDashboard:
+                        showDashboard();
+                        break;
+                    case R.id.bottomBarCalendar:
+                        showCalendar();
+                        break;
+                    case R.id.bottomBarAnalysis:
+                        showAnalysis();
+                        break;
+                    case R.id.bottomBarProfile:
+                        showProfile();
+                        break;
+                }
+            }
+
+            @Override
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
+                if (menuItemId == R.id.bottomBarDashboard) {
+                    // The user reselected item number one, scroll your content to top.
+                }
+            }
+        });
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -71,21 +113,11 @@ public class MainActivity
         });
         */
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         meteor = MeteorSingleton.createInstance(this, "ws://somet.herokuapp.com/websocket", new InMemoryDatabase());
         meteor.addCallback(this);
         meteor.connect();
 
         loadingDialog = new MaterialDialog.Builder(this)
-                .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
                 .progress(true, 0)
                 .show();
@@ -93,68 +125,36 @@ public class MainActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_about) {
-            return true;
+        switch (id) {
+            case R.id.action_about :
+                return true;
+            case R.id.action_logout:
+                meteor.logout();
+                isTrainer = false;
+                launchLogin();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
 
-        if (id == R.id.nav_dashboard) {
-            showDashboard();
-        } else if (id == R.id.nav_workouts) {
-            getSupportActionBar().setTitle("Entrainements");
-            showWorkouts();
-        } else if (id == R.id.nav_plans) {
-            getSupportActionBar().setTitle("Plans");
-
-        } else if (id == R.id.nav_events) {
-            getSupportActionBar().setTitle("Événements");
-
-        } else if (id == R.id.nav_calendar) {
-            getSupportActionBar().setTitle("Calendrier");
-
-        } else if (id == R.id.nav_analysis) {
-            getSupportActionBar().setTitle("Analyse");
-
-        } else if (id == R.id.nav_settings) {
-
-        }else if (id == R.id.nav_logout) {
-            meteor.logout();
-            launchLogin();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        mBottomBar.onSaveInstanceState(outState);
     }
 
     @Override
@@ -181,6 +181,13 @@ public class MainActivity
 
     @Override
     public void onDataRemoved(String collectionName, String documentID) {
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(int position, long id) {
+        // When the given dropdown item is selected, show its contents in the
+        // container view.
+        return true;
     }
 
     @Override
@@ -213,13 +220,31 @@ public class MainActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, DashboardFG);
         ft.commit();
+        getSupportActionBar().setTitle(R.string.nav_dashboard);
     }
 
-    public void showWorkouts() {
-        Fragment WorkoutsFG = new WorkoutsFragment();
+    public void showCalendar() {
+        Fragment CalendarFG = new CalendarFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame, WorkoutsFG);
+        ft.replace(R.id.mainFrame, CalendarFG);
         ft.commit();
+        getSupportActionBar().setTitle(R.string.nav_calendar);
+    }
+
+    public void showAnalysis() {
+        Fragment AnalysisFG = new AnalysisFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame, AnalysisFG);
+        ft.commit();
+        getSupportActionBar().setTitle(R.string.nav_analysis);
+    }
+
+    public void showProfile() {
+        Fragment ProfileFG = new ProfileFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame, ProfileFG);
+        ft.commit();
+        getSupportActionBar().setTitle(R.string.nav_profile);
     }
 
     public void launchLogin() {
@@ -243,25 +268,22 @@ public class MainActivity
         toast.show();
     }
 
-    public void setDrawerData() {
-        TextView username = (TextView) findViewById(R.id.username);
-        TextView cn = (TextView) findViewById(R.id.completeName);
-        setText(R.id.username,User.get("username"));
-        setText(R.id.completeName ,((HashMap<String, Object>) User.get("profile")).get("complete_name"));
-    }
-
     public void prepareBoard() {
         meteor.subscribe("getUserData", new Object[]{}, new SubscribeListener() {
             @Override
             public void onSuccess() {
-                Document user_doc = meteor.getDatabase().getCollection("users").getDocument(meteor.getUserId());
+                Document user_doc = meteor.getDatabase().getCollection("users").findOne();
                 User.put("profile", user_doc.getField("profile"));
                 User.put("username", user_doc.getField("username"));
-                System.out.println(User);
-                setDrawerData();
-                toast("Bienvenue @" + user_doc.getField("username") + ".");
-                showDashboard();
                 loadingDialog.dismiss();
+                HashMap<String, String> pro = (HashMap<String, String>) user_doc.getField("profile");
+                System.out.println(pro);
+                if(pro.containsKey("trainer")) {
+                    isTrainer = true;
+                }
+                toast(isTrainer() + "");
+                prepareActionBar();
+                showDashboard();
             }
 
             @Override
@@ -269,6 +291,48 @@ public class MainActivity
 
             }
         });
+    }
+
+    public ArrayAdapter<String> adapter;
+
+    public void finishActionBar(ArrayList<String> dropdownValues) {
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        adapter = new ArrayAdapter<String>(actionBar.getThemedContext(),
+                android.R.layout.simple_spinner_item, android.R.id.text1,
+                dropdownValues);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        actionBar.setListNavigationCallbacks(adapter, this);
+    }
+
+    public void prepareActionBar() {
+        if(isTrainer) {
+            meteor.subscribe("athletesOfCurrentUserSync", new Object[]{}, new SubscribeListener() {
+                @Override
+                public void onSuccess() {
+                    Document[] athletes = meteor.getDatabase().getCollection("athletes").find();
+                    ArrayList<String> dropdownAthletes = new ArrayList<>();
+                    for (Document athlete : athletes) {
+                        dropdownAthletes.add(athlete.getField("username").toString());
+                    }
+                    System.out.println(dropdownAthletes);
+                    finishActionBar(dropdownAthletes);
+                }
+
+                @Override
+                public void onError(String error, String reason, String details) {
+
+                }
+            });
+        }
+        else {
+            actionBar.setDisplayShowTitleEnabled(true);
+            if(adapter != null) {
+                adapter.clear();
+                actionBar.setListNavigationCallbacks(adapter,this);
+            }
+        }
     }
 
     public void setText(Integer id, Object txt) {
@@ -279,10 +343,12 @@ public class MainActivity
 
     public static HashMap<String, Object> getMap(Document doc) {
         HashMap<String, Object> obj = new HashMap<>();
-        for (String f : doc.getFieldNames()) {
-            obj.put(f, doc.getField(f));
+        if(doc != null) {
+            for (String f : doc.getFieldNames()) {
+                obj.put(f, doc.getField(f));
+            }
+            obj.put("_id", doc.getId());
         }
-        obj.put("_id", doc.getId());
         return obj;
     }
 
@@ -313,7 +379,7 @@ public class MainActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onFragmentInteraction(Uri uri) {
 
     }
 

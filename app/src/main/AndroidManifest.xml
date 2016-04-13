@@ -22,10 +22,10 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppTheme.Connecting" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SignupActivity"
-            android:theme="@style/AppTheme.Connecting" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".WorkoutActivity"
             android:label="@string/title_activity_workout"
