@@ -22,26 +22,25 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     TextView wkDetailsButton;
 
-    public DashboardFragment() { }
+    public DashboardFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String usr = (String) Main.getUser().get("username");
+        String usr = (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"));
         System.out.println(usr);
-        MeteorSingleton.getInstance().subscribe("lastWorkoutOfUsrSync", new Object[]{ usr }, new SubscribeListener() {
+        MeteorSingleton.getInstance().subscribe("lastWorkoutOfUsrSync", new Object[]{usr.toString()}, new SubscribeListener() {
             @Override
             public void onSuccess() {
                 setLastWkCard();
-                //progressDialog.dismiss();
             }
 
             @Override
             public void onError(String error, String reason, String details) {
-
+                Main.toast(error);
             }
         });
-
     }
 
     @Override
@@ -77,6 +76,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lastWkDetails:
+                System.out.println(last_wk.get("title"));
                 Main.openWorkout(last_wk.get("_id"));
                 break;
         }
@@ -84,20 +84,25 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     public interface OnFragmentInteractionListener {
         void toast(String str);
+
         HashMap<String, Object> getUser();
+
         void setText(Integer id, Object txt);
+
         void openWorkout(Object id);
+
         boolean isTrainer();
+
+        String getSelectedAthlete();
     }
 
     public void setLastWkCard() {
-        if(!Main.isTrainer()) {
-            last_wk = MainActivity.getMap(MeteorSingleton.getInstance().getDatabase().getCollection("workouts").findOne());
-            System.out.println(last_wk);
-            Main.setText(R.id.lastWkTitle, last_wk.get("title"));
-            Main.setText(R.id.lastWkDescription, last_wk.get("description"));
-            Main.setText(R.id.lastWkDuration, MainActivity.dispDuration(last_wk.get("duration")));
-            Main.setText(R.id.lastWkDate, MainActivity.dispDate(last_wk.get("start_date")));
-        }
+        last_wk = MainActivity.getMap(MeteorSingleton.getInstance().getDatabase().getCollection("workouts").whereEqual("owner", (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"))).findOne());
+        System.out.println(last_wk);
+        Main.setText(R.id.lastWkTitle, last_wk.get("title"));
+        Main.setText(R.id.lastWkDescription, last_wk.get("description"));
+        Main.setText(R.id.lastWkDuration, MainActivity.dispDuration(last_wk.get("duration")));
+        Main.setText(R.id.lastWkDate, MainActivity.dispDate(last_wk.get("start_date")));
+        MainActivity.dismissLoadingDialog();
     }
 }

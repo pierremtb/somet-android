@@ -55,15 +55,23 @@ public class MainActivity
     private static final int REQUEST_LOGIN = 0;
     public Meteor meteor;
     private HashMap<String, Object> User = new HashMap<>();
-
-    public MaterialDialog loadingDialog;
-    private BottomBar mBottomBar;
-
-    public ActionBar actionBar;
     public boolean isTrainer = false;
+    public String selectedAthlete = "";
+    public ArrayList<String> athletesOfTrainer = new ArrayList<>();
+    public boolean subscribed = false;
+
+    public static MaterialDialog loadingDialog;
+    private BottomBar mBottomBar;
+    public ActionBar actionBar;
+
+    private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
     public boolean isTrainer() {
         return isTrainer;
+    }
+
+    public String getSelectedAthlete() {
+        return selectedAthlete;
     }
 
     @Override
@@ -74,23 +82,27 @@ public class MainActivity
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
 
+        isTrainer = false;
+
         mBottomBar = BottomBar.attach(this, savedInstanceState);
         mBottomBar.setItemsFromMenu(R.menu.bottom_bar_menu, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
-                switch (menuItemId) {
-                    case R.id.bottomBarDashboard:
-                        showDashboard();
-                        break;
-                    case R.id.bottomBarCalendar:
-                        showCalendar();
-                        break;
-                    case R.id.bottomBarAnalysis:
-                        showAnalysis();
-                        break;
-                    case R.id.bottomBarProfile:
-                        showProfile();
-                        break;
+                if(subscribed) {
+                    switch (menuItemId) {
+                        case R.id.bottomBarDashboard:
+                            showDashboard();
+                            break;
+                        case R.id.bottomBarCalendar:
+                            showCalendar();
+                            break;
+                        case R.id.bottomBarAnalysis:
+                            showAnalysis();
+                            break;
+                        case R.id.bottomBarProfile:
+                            showProfile();
+                            break;
+                    }
                 }
             }
 
@@ -141,8 +153,8 @@ public class MainActivity
             case R.id.action_about :
                 return true;
             case R.id.action_logout:
-                meteor.logout();
                 isTrainer = false;
+                meteor.logout();
                 launchLogin();
                 return true;
         }
@@ -151,9 +163,17 @@ public class MainActivity
     }
 
     @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Restore the previously serialized current dropdown position.
+        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
+            getActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-
+        outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getSupportActionBar().getSelectedNavigationIndex());
         mBottomBar.onSaveInstanceState(outState);
     }
 
@@ -185,9 +205,14 @@ public class MainActivity
 
     @Override
     public boolean onNavigationItemSelected(int position, long id) {
-        // When the given dropdown item is selected, show its contents in the
-        // container view.
-        return true;
+        if(subscribed) {
+            startLoadingDialog(this);
+            selectedAthlete = athletesOfTrainer.get(position);
+            showDashboard();
+            return true;
+        }
+        else
+            return false;
     }
 
     @Override
@@ -275,13 +300,12 @@ public class MainActivity
                 Document user_doc = meteor.getDatabase().getCollection("users").findOne();
                 User.put("profile", user_doc.getField("profile"));
                 User.put("username", user_doc.getField("username"));
-                loadingDialog.dismiss();
-                HashMap<String, String> pro = (HashMap<String, String>) user_doc.getField("profile");
+                subscribed = true;
+                HashMap<String, Object> pro = (HashMap<String, Object>) user_doc.getField("profile");
                 System.out.println(pro);
-                if(pro.containsKey("trainer")) {
-                    isTrainer = true;
-                }
-                toast(isTrainer() + "");
+                if(pro.containsKey("trainer"))
+                    if(((Boolean) pro.get("trainer")))
+                        isTrainer = true;
                 prepareActionBar();
                 showDashboard();
             }
@@ -295,12 +319,12 @@ public class MainActivity
 
     public ArrayAdapter<String> adapter;
 
-    public void finishActionBar(ArrayList<String> dropdownValues) {
+    public void finishActionBar() {
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         adapter = new ArrayAdapter<String>(actionBar.getThemedContext(),
                 android.R.layout.simple_spinner_item, android.R.id.text1,
-                dropdownValues);
+                athletesOfTrainer);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         actionBar.setListNavigationCallbacks(adapter, this);
@@ -312,12 +336,13 @@ public class MainActivity
                 @Override
                 public void onSuccess() {
                     Document[] athletes = meteor.getDatabase().getCollection("athletes").find();
-                    ArrayList<String> dropdownAthletes = new ArrayList<>();
+                    athletesOfTrainer = new ArrayList<>();
                     for (Document athlete : athletes) {
-                        dropdownAthletes.add(athlete.getField("username").toString());
+                        athletesOfTrainer.add(athlete.getField("username").toString());
                     }
-                    System.out.println(dropdownAthletes);
-                    finishActionBar(dropdownAthletes);
+                    selectedAthlete = athletesOfTrainer.size() > 0 ? athletesOfTrainer.get(0) : "";
+                    System.out.println(athletesOfTrainer);
+                    finishActionBar();
                 }
 
                 @Override
@@ -356,9 +381,8 @@ public class MainActivity
         int sec = 0;
         try{
             sec = Integer.parseInt(str.toString());
-        } catch (NumberFormatException e) {
-            //Will Throw exception!
-            //do something! anything to handle the exception.
+        } catch (Exception e) {
+            return "";
         }
         return String.format("%02d:%02d:%02d", sec / 3600, (sec % 3600) / 60, sec % 60);
     }
@@ -376,6 +400,17 @@ public class MainActivity
 
     public HashMap<String, Object> getUser() {
         return User;
+    }
+
+    public static void startLoadingDialog(Context context) {
+        loadingDialog = new MaterialDialog.Builder(context)
+            .content(R.string.please_wait)
+            .progress(true, 0)
+            .show();
+    }
+
+    public static void dismissLoadingDialog() {
+        loadingDialog.dismiss();
     }
 
     @Override

@@ -58,6 +58,8 @@ public class WorkoutActivity extends AppCompatActivity {
     public MaterialDialog loadingDialog;
 
     public HashMap<String, Object> workout = new HashMap<>();
+    public static String wk_id = "";
+    public static boolean is_fit = false;
 
     public TextView openedWkTitle;
     public TextView openedWkDescription;
@@ -102,9 +104,9 @@ public class WorkoutActivity extends AppCompatActivity {
                 .show();
 
         Bundle b = getIntent().getExtras();
-        String id = b.getString("id");
+        wk_id = b.getString("id");
 
-        MeteorSingleton.getInstance().subscribe("workoutOfThisId", new Object[]{ id }, new SubscribeListener() {
+        MeteorSingleton.getInstance().subscribe("workoutOfThisId", new Object[]{ wk_id }, new SubscribeListener() {
             @Override
             public void onSuccess() {
                 settleWorkout();
@@ -186,7 +188,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_workout_crs, container, false);
 
-            HashMap<String, Object> cr = (HashMap<String, Object>) MeteorSingleton.getInstance().getDatabase().getCollection("workouts").findOne().getField("cr");
+            HashMap<String, Object> cr = (HashMap<String, Object>) MeteorSingleton.getInstance().getDatabase().getCollection("workouts").getDocument(wk_id).getField("cr");
             float cr_eff = 0, cr_ple = 0, cr_sensa = 0, cr_mood = 0;
             try {
                 cr_eff = Float.parseFloat(cr.get("effort").toString());
@@ -297,7 +299,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void settleWorkout() {
-        workout = MainActivity.getMap(MeteorSingleton.getInstance().getDatabase().getCollection("workouts").findOne());
+        workout = MainActivity.getMap(MeteorSingleton.getInstance().getDatabase().getCollection("workouts").getDocument(wk_id));
         System.out.println(workout);
 
         setText(R.id.openedWkDuration , MainActivity.dispDuration(workout.get("duration")));
@@ -306,121 +308,126 @@ public class WorkoutActivity extends AppCompatActivity {
         setText(R.id.openedWkDate, MainActivity.dispDate(workout.get("start_date")));
 
         getSupportActionBar().setTitle(workout.get("title").toString());
-
         HashMap<String, Object> fit_values = (HashMap<String, Object>) workout.get("fit_values");
-        HashMap<String, Object> time = (HashMap<String, Object>) fit_values.get("time");
-        HashMap<String, Object> cadence = (HashMap<String, Object>) fit_values.get("cadence");
-        HashMap<String, Object> elevation = (HashMap<String, Object>) fit_values.get("elevation");
-        HashMap<String, Object> speed = (HashMap<String, Object>) fit_values.get("speed");
-        HashMap<String, Object> heart_rate = (HashMap<String, Object>) fit_values.get("heart_rate");
-        HashMap<String, Object> power = (HashMap<String, Object>) fit_values.get("power");
 
-        ArrayList<Object> time_values = new ArrayList<>();
-        ArrayList<Object> cadence_values = new ArrayList<>();
-        ArrayList<Object> elevation_values = new ArrayList<>();
-        ArrayList<Object> speed_values = new ArrayList<>();
-        ArrayList<Object> heart_rate_values = new ArrayList<>();
-        ArrayList<Object> power_values = new ArrayList<>();
+        is_fit = !(fit_values.get("time") instanceof String);
 
-        time_values = (ArrayList<Object>) time.get("values");
-        cadence_values = (ArrayList<Object>) cadence.get("values");
-        elevation_values = (ArrayList<Object>) elevation.get("values");
-        speed_values = (ArrayList<Object>) speed.get("values");
-        heart_rate_values = (ArrayList<Object>) heart_rate.get("values");
-        power_values = (ArrayList<Object>) power.get("values");
+        if(is_fit) {
+
+            HashMap<String, Object> time = (HashMap<String, Object>) fit_values.get("time");
+            HashMap<String, Object> cadence = (HashMap<String, Object>) fit_values.get("cadence");
+            HashMap<String, Object> elevation = (HashMap<String, Object>) fit_values.get("elevation");
+            HashMap<String, Object> speed = (HashMap<String, Object>) fit_values.get("speed");
+            HashMap<String, Object> heart_rate = (HashMap<String, Object>) fit_values.get("heart_rate");
+            HashMap<String, Object> power = (HashMap<String, Object>) fit_values.get("power");
+
+            ArrayList<Object> time_values = new ArrayList<>();
+            ArrayList<Object> cadence_values = new ArrayList<>();
+            ArrayList<Object> elevation_values = new ArrayList<>();
+            ArrayList<Object> speed_values = new ArrayList<>();
+            ArrayList<Object> heart_rate_values = new ArrayList<>();
+            ArrayList<Object> power_values = new ArrayList<>();
+
+            time_values = (ArrayList<Object>) time.get("values");
+            cadence_values = (ArrayList<Object>) cadence.get("values");
+            elevation_values = (ArrayList<Object>) elevation.get("values");
+            speed_values = (ArrayList<Object>) speed.get("values");
+            heart_rate_values = (ArrayList<Object>) heart_rate.get("values");
+            power_values = (ArrayList<Object>) power.get("values");
 
 
-        System.out.println(speed_values);
-        System.out.println(heart_rate_values);
-        System.out.println(power_values);
+            System.out.println(speed_values);
+            System.out.println(heart_rate_values);
+            System.out.println(power_values);
 
-        LineChart lineChartCadence = (LineChart) findViewById(R.id.chartCadence);
-        LineChart lineChartElevation = (LineChart) findViewById(R.id.chartElevation);
-        LineChart lineChartSpeed = (LineChart) findViewById(R.id.chartSpeed);
-        LineChart lineChartHeartRate = (LineChart) findViewById(R.id.chartHeartRate);
-        LineChart lineChartPower = (LineChart) findViewById(R.id.chartPower);
+            LineChart lineChartCadence = (LineChart) findViewById(R.id.chartCadence);
+            LineChart lineChartElevation = (LineChart) findViewById(R.id.chartElevation);
+            LineChart lineChartSpeed = (LineChart) findViewById(R.id.chartSpeed);
+            LineChart lineChartHeartRate = (LineChart) findViewById(R.id.chartHeartRate);
+            LineChart lineChartPower = (LineChart) findViewById(R.id.chartPower);
 
-        ArrayList<Entry> entriesCadence = new ArrayList<>();
-        ArrayList<Entry> entriesElevation = new ArrayList<>();
-        ArrayList<Entry> entriesSpeed = new ArrayList<>();
-        ArrayList<Entry> entriesHeartRate = new ArrayList<>();
-        ArrayList<Entry> entriesPower = new ArrayList<>();
+            ArrayList<Entry> entriesCadence = new ArrayList<>();
+            ArrayList<Entry> entriesElevation = new ArrayList<>();
+            ArrayList<Entry> entriesSpeed = new ArrayList<>();
+            ArrayList<Entry> entriesHeartRate = new ArrayList<>();
+            ArrayList<Entry> entriesPower = new ArrayList<>();
 
-        ArrayList<String> labels = new ArrayList<>();
+            ArrayList<String> labels = new ArrayList<>();
 
-        for (int i=0;i<time_values.size();i++) {
-            if(i%10 == 0) {
-                Integer index = time_values.get(i) != null && !time_values.isEmpty() ? Double.valueOf(time_values.get(i).toString()).intValue() : 0;
-                Integer cad = cadence_values.get(i) != null && !cadence_values.isEmpty() ? Double.valueOf(cadence_values.get(i).toString()).intValue() : 0;
-                Integer hr = heart_rate_values.get(i) != null && !heart_rate_values.isEmpty() ? Double.valueOf(heart_rate_values.get(i).toString()).intValue(): 0;
-                Integer elev = elevation_values != null && !elevation_values.isEmpty() ? Double.valueOf(elevation_values.get(i).toString()).intValue() : 0;
-                Integer sp = speed_values.get(i) != null && !speed_values.isEmpty() ? Double.valueOf(speed_values.get(i).toString()).intValue() : 0;
-                Integer pw = power_values.get(i) != null && !power_values.isEmpty() ? Double.valueOf(power_values.get(i).toString()).intValue() : 0;
+            for (int i = 0; i < time_values.size(); i++) {
+                if (i % 10 == 0) {
+                    Integer index = time_values.get(i) != null && !time_values.isEmpty() ? Double.valueOf(time_values.get(i).toString()).intValue() : 0;
+                    Integer cad = cadence_values.get(i) != null && !cadence_values.isEmpty() ? Double.valueOf(cadence_values.get(i).toString()).intValue() : 0;
+                    Integer hr = heart_rate_values.get(i) != null && !heart_rate_values.isEmpty() ? Double.valueOf(heart_rate_values.get(i).toString()).intValue() : 0;
+                    Integer elev = elevation_values != null && !elevation_values.isEmpty() ? Double.valueOf(elevation_values.get(i).toString()).intValue() : 0;
+                    Integer sp = speed_values.get(i) != null && !speed_values.isEmpty() ? Double.valueOf(speed_values.get(i).toString()).intValue() : 0;
+                    Integer pw = power_values.get(i) != null && !power_values.isEmpty() ? Double.valueOf(power_values.get(i).toString()).intValue() : 0;
 
-                entriesCadence.add(new Entry(cad, index));
-                entriesElevation.add(new Entry(elev, index));
-                entriesSpeed.add(new Entry(sp, index));
-                entriesPower.add(new Entry(pw, index));
-                entriesHeartRate.add(new Entry(hr, index));
+                    entriesCadence.add(new Entry(cad, index));
+                    entriesElevation.add(new Entry(elev, index));
+                    entriesSpeed.add(new Entry(sp, index));
+                    entriesPower.add(new Entry(pw, index));
+                    entriesHeartRate.add(new Entry(hr, index));
 
-                labels.add(time_values.get(i).toString());
+                    labels.add(time_values.get(i).toString());
+                }
             }
+
+            LineDataSet datasetCadence = new LineDataSet(entriesCadence, "# of Calls");
+            datasetCadence.setDrawFilled(true);
+            datasetCadence.setDrawCubic(true);
+            datasetCadence.setDrawCircles(false);
+            datasetCadence.setColor(getResources().getColor(R.color.colorAccent));
+            datasetCadence.setFillColor(getResources().getColor(R.color.colorAccent));
+            LineData data = new LineData(labels, datasetCadence);
+            lineChartCadence.setData(data);
+            lineChartCadence.setDescription("");
+            lineChartCadence.getLegend().setEnabled(false);
+
+            LineDataSet datasetElevation = new LineDataSet(entriesElevation, "nsrtnrst");
+            datasetElevation.setDrawFilled(true);
+            datasetElevation.setDrawCubic(true);
+            datasetElevation.setDrawCircles(false);
+            datasetElevation.setColor(getResources().getColor(R.color.colorAccent));
+            datasetElevation.setFillColor(getResources().getColor(R.color.colorAccent));
+            LineData dataElevation = new LineData(labels, datasetElevation);
+            lineChartElevation.setData(dataElevation);
+            lineChartElevation.setDescription("");
+            lineChartElevation.getLegend().setEnabled(false);
+
+            LineDataSet datasetSpeed = new LineDataSet(entriesSpeed, "# of Calls");
+            datasetSpeed.setDrawFilled(true);
+            datasetSpeed.setDrawCubic(true);
+            datasetSpeed.setDrawCircles(false);
+            datasetSpeed.setColor(getResources().getColor(R.color.colorAccent));
+            datasetSpeed.setFillColor(getResources().getColor(R.color.colorAccent));
+            LineData dataSpeed = new LineData(labels, datasetSpeed);
+            lineChartSpeed.setData(dataSpeed);
+            lineChartSpeed.setDescription("");
+            lineChartSpeed.getLegend().setEnabled(false);
+
+            LineDataSet datasetHeartRate = new LineDataSet(entriesHeartRate, "# of Calls");
+            datasetHeartRate.setDrawFilled(true);
+            datasetHeartRate.setDrawCubic(true);
+            datasetHeartRate.setDrawCircles(false);
+            datasetHeartRate.setColor(getResources().getColor(R.color.colorAccent));
+            datasetHeartRate.setFillColor(getResources().getColor(R.color.colorAccent));
+            LineData dataHeartRate = new LineData(labels, datasetHeartRate);
+            lineChartHeartRate.setData(dataHeartRate);
+            lineChartHeartRate.setDescription("");
+            lineChartHeartRate.getLegend().setEnabled(false);
+
+            LineDataSet datasetPower = new LineDataSet(entriesPower, "# of Calls");
+            datasetPower.setDrawFilled(true);
+            datasetPower.setDrawCubic(true);
+            datasetPower.setDrawCircles(false);
+            datasetPower.setColor(getResources().getColor(R.color.colorAccent));
+            datasetPower.setFillColor(getResources().getColor(R.color.colorAccent));
+            LineData dataPower = new LineData(labels, datasetPower);
+            lineChartPower.setData(dataPower);
+            lineChartPower.setDescription("");
+            lineChartPower.getLegend().setEnabled(false);
         }
-
-        LineDataSet datasetCadence = new LineDataSet(entriesCadence, "# of Calls");
-        datasetCadence.setDrawFilled(true);
-        datasetCadence.setDrawCubic(true);
-        datasetCadence.setDrawCircles(false);
-        datasetCadence.setColor(getResources().getColor(R.color.colorAccent));
-        datasetCadence.setFillColor(getResources().getColor(R.color.colorAccent));
-        LineData data = new LineData(labels, datasetCadence);
-        lineChartCadence.setData(data);
-        lineChartCadence.setDescription("");
-        lineChartCadence.getLegend().setEnabled(false);
-
-        LineDataSet datasetElevation = new LineDataSet(entriesElevation, "nsrtnrst");
-        datasetElevation.setDrawFilled(true);
-        datasetElevation.setDrawCubic(true);
-        datasetElevation.setDrawCircles(false);
-        datasetElevation.setColor(getResources().getColor(R.color.colorAccent));
-        datasetElevation.setFillColor(getResources().getColor(R.color.colorAccent));
-        LineData dataElevation = new LineData(labels, datasetElevation);
-        lineChartElevation.setData(dataElevation);
-        lineChartElevation.setDescription("");
-        lineChartElevation.getLegend().setEnabled(false);
-
-        LineDataSet datasetSpeed = new LineDataSet(entriesSpeed, "# of Calls");
-        datasetSpeed.setDrawFilled(true);
-        datasetSpeed.setDrawCubic(true);
-        datasetSpeed.setDrawCircles(false);
-        datasetSpeed.setColor(getResources().getColor(R.color.colorAccent));
-        datasetSpeed.setFillColor(getResources().getColor(R.color.colorAccent));
-        LineData dataSpeed = new LineData(labels, datasetSpeed);
-        lineChartSpeed.setData(dataSpeed);
-        lineChartSpeed.setDescription("");
-        lineChartSpeed.getLegend().setEnabled(false);
-
-        LineDataSet datasetHeartRate = new LineDataSet(entriesHeartRate, "# of Calls");
-        datasetHeartRate.setDrawFilled(true);
-        datasetHeartRate.setDrawCubic(true);
-        datasetHeartRate.setDrawCircles(false);
-        datasetHeartRate.setColor(getResources().getColor(R.color.colorAccent));
-        datasetHeartRate.setFillColor(getResources().getColor(R.color.colorAccent));
-        LineData dataHeartRate = new LineData(labels, datasetHeartRate);
-        lineChartHeartRate.setData(dataHeartRate);
-        lineChartHeartRate.setDescription("");
-        lineChartHeartRate.getLegend().setEnabled(false);
-
-        LineDataSet datasetPower = new LineDataSet(entriesPower, "# of Calls");
-        datasetPower.setDrawFilled(true);
-        datasetPower.setDrawCubic(true);
-        datasetPower.setDrawCircles(false);
-        datasetPower.setColor(getResources().getColor(R.color.colorAccent));
-        datasetPower.setFillColor(getResources().getColor(R.color.colorAccent));
-        LineData dataPower = new LineData(labels, datasetPower);
-        lineChartPower.setData(dataPower);
-        lineChartPower.setDescription("");
-        lineChartPower.getLegend().setEnabled(false);
     }
 
     public void setText(Integer id, Object txt) {
