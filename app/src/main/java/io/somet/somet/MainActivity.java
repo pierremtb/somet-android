@@ -12,6 +12,7 @@ import android.os.PersistableBundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +34,7 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -98,10 +100,10 @@ public class MainActivity
                             break;
                         case R.id.bottomBarAnalysis:
                             showAnalysis();
-                            break;
+                            break;/*
                         case R.id.bottomBarProfile:
                             showProfile();
-                            break;
+                            break;*/
                     }
                 }
             }
@@ -114,6 +116,9 @@ public class MainActivity
             }
         });
 
+        mBottomBar.mapColorForTab(0, "#7B1FA2");
+        mBottomBar.mapColorForTab(1, "#FF5252");
+        mBottomBar.mapColorForTab(2, "#FF9800");
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +162,9 @@ public class MainActivity
                 meteor.logout();
                 launchLogin();
                 return true;
+            case R.id.action_profile:
+                openProfile();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -180,7 +188,7 @@ public class MainActivity
     @Override
     public void onConnect(final boolean signedInAutomatically) {
         if (signedInAutomatically) {
-            prepareBoard();
+            prepareBoard(false);
         } else {
             launchLogin();
         }
@@ -227,7 +235,7 @@ public class MainActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode != RESULT_CANCELED) {
             if (requestCode == REQUEST_LOGIN) {
-                prepareBoard();
+                prepareBoard(true);
             }
         }
     }
@@ -245,7 +253,11 @@ public class MainActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, DashboardFG);
         ft.commit();
-        getSupportActionBar().setTitle(R.string.nav_dashboard);
+        dismissLoadingDialog();
+        System.out.println("--LOG-COLLECTIONS--");
+        System.out.println(Arrays.toString(meteor.getDatabase().getCollectionNames()));
+        System.out.println(meteor.getDatabase().getCollection("workouts").count());
+        System.out.println("--ENDLOG--");
     }
 
     public void showCalendar() {
@@ -253,7 +265,6 @@ public class MainActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, CalendarFG);
         ft.commit();
-        getSupportActionBar().setTitle(R.string.nav_calendar);
     }
 
     public void showAnalysis() {
@@ -261,7 +272,6 @@ public class MainActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, AnalysisFG);
         ft.commit();
-        getSupportActionBar().setTitle(R.string.nav_analysis);
     }
 
     public void showProfile() {
@@ -269,7 +279,6 @@ public class MainActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, ProfileFG);
         ft.commit();
-        getSupportActionBar().setTitle(R.string.nav_profile);
     }
 
     public void launchLogin() {
@@ -285,6 +294,11 @@ public class MainActivity
         startActivityForResult(intent, 0);
     }
 
+    public void openProfile() {
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivityForResult(intent, 0);
+    }
+
     public void toast(String str) {
         Context context = getApplicationContext();
         CharSequence text = str;
@@ -293,28 +307,38 @@ public class MainActivity
         toast.show();
     }
 
-    public void prepareBoard() {
-        meteor.subscribe("getUserData", new Object[]{}, new SubscribeListener() {
-            @Override
-            public void onSuccess() {
-                Document user_doc = meteor.getDatabase().getCollection("users").findOne();
-                User.put("profile", user_doc.getField("profile"));
-                User.put("username", user_doc.getField("username"));
-                subscribed = true;
-                HashMap<String, Object> pro = (HashMap<String, Object>) user_doc.getField("profile");
-                System.out.println(pro);
-                if(pro.containsKey("trainer"))
-                    if(((Boolean) pro.get("trainer")))
-                        isTrainer = true;
-                prepareActionBar();
-                showDashboard();
-            }
+    public void prepareBoard(final boolean doGet) {
+        if(true) {
+            meteor.subscribe("mainUserDataSync", new Object[]{}, new SubscribeListener() {
+                @Override
+                public void onSuccess() {
+                    setUserData();
+                    prepareActionBar();
+                    showDashboard();
+                }
 
-            @Override
-            public void onError(String error, String reason, String details) {
+                @Override
+                public void onError(String error, String reason, String details) {
+                    toast(error + "-" + reason);
+                }
+            });
+        } else {
+            setUserData();
+            prepareActionBar();
+            showDashboard();
+        }
+    }
 
-            }
-        });
+    public void setUserData() {
+        Document user_doc = meteor.getDatabase().getCollection("users").findOne();
+        User.put("profile", user_doc.getField("profile"));
+        User.put("username", user_doc.getField("username"));
+        subscribed = true;
+        HashMap<String, Object> pro = (HashMap<String, Object>) user_doc.getField("profile");
+        System.out.println(pro);
+        if(pro.containsKey("trainer"))
+            if(((Boolean) pro.get("trainer")))
+                isTrainer = true;
     }
 
     public ArrayAdapter<String> adapter;
@@ -332,26 +356,9 @@ public class MainActivity
 
     public void prepareActionBar() {
         if(isTrainer) {
-            meteor.subscribe("athletesOfCurrentUserSync", new Object[]{}, new SubscribeListener() {
-                @Override
-                public void onSuccess() {
-                    Document[] athletes = meteor.getDatabase().getCollection("athletes").find();
-                    athletesOfTrainer = new ArrayList<>();
-                    for (Document athlete : athletes) {
-                        athletesOfTrainer.add(athlete.getField("username").toString());
-                    }
-                    selectedAthlete = athletesOfTrainer.size() > 0 ? athletesOfTrainer.get(0) : "";
-                    System.out.println(athletesOfTrainer);
-                    finishActionBar();
-                }
-
-                @Override
-                public void onError(String error, String reason, String details) {
-
-                }
-            });
-        }
-        else {
+            setAthletesOfTrainer();
+            finishActionBar();
+        } else {
             actionBar.setDisplayShowTitleEnabled(true);
             if(adapter != null) {
                 adapter.clear();
@@ -360,42 +367,21 @@ public class MainActivity
         }
     }
 
+    public void setAthletesOfTrainer() {
+        Document[] athletes = meteor.getDatabase().getCollection("athletes").find();
+        athletesOfTrainer = new ArrayList<>();
+        for (Document athlete : athletes) {
+            athletesOfTrainer.add(athlete.getField("username").toString());
+        }
+        System.out.println("AAAA");
+        System.out.println(athletesOfTrainer);
+        selectedAthlete = athletesOfTrainer.size() > 0 ? athletesOfTrainer.get(0) : "";
+    }
+
     public void setText(Integer id, Object txt) {
         try {
             ((TextView) findViewById(id)).setText(txt.toString());
         } catch (Exception e ) {}
-    }
-
-    public static HashMap<String, Object> getMap(Document doc) {
-        HashMap<String, Object> obj = new HashMap<>();
-        if(doc != null) {
-            for (String f : doc.getFieldNames()) {
-                obj.put(f, doc.getField(f));
-            }
-            obj.put("_id", doc.getId());
-        }
-        return obj;
-    }
-
-    public static String dispDuration(Object str) {
-        int sec = 0;
-        try{
-            sec = Integer.parseInt(str.toString());
-        } catch (Exception e) {
-            return "";
-        }
-        return String.format("%02d:%02d:%02d", sec / 3600, (sec % 3600) / 60, sec % 60);
-    }
-
-    public static String dispDate(Object str) {
-        HashMap<String, Long> t = (HashMap<String, Long>) str;
-        long timestamp = 0;
-        try {
-            timestamp = t.get("$date");
-        } catch (Exception e ) {}
-        Date date = new Date(timestamp);
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        return formatter.format(date);
     }
 
     public HashMap<String, Object> getUser() {

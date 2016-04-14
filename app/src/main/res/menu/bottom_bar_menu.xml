@@ -2,7 +2,8 @@
     <item
         android:id="@+id/bottomBarDashboard"
         android:icon="@drawable/ic_dashboard"
-        android:title="@string/nav_dashboard" />
+        android:title="@string/nav_dashboard"
+        android:titleCondensed=""/>
 
     <item
         android:id="@+id/bottomBarCalendar"
@@ -13,10 +14,5 @@
         android:id="@+id/bottomBarAnalysis"
         android:icon="@drawable/ic_trending_up"
         android:title="@string/nav_analysis" />
-
-    <item
-        android:id="@+id/bottomBarProfile"
-        android:icon="@drawable/ic_account_circle"
-        android:title="@string/nav_profile" />
 
 </menu>

@@ -52,4 +52,5 @@
 
     <!-- Charts -->
     <dimen name="chart_height">200dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
 </resources>

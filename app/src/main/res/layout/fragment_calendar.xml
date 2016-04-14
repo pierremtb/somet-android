@@ -4,4 +4,16 @@
     android:layout_height="match_parent"
     tools:context="io.somet.somet.CalendarFragment">
 
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:mcv_showOtherDates="all"
+        app:mcv_headerTextAppearance="@style/CustomTextAppearance"
+        app:mcv_dateTextAppearance="@style/CustomTextAppearance"
+        app:mcv_arrowColor="@color/white"
+        app:mcv_selectionColor="@color/colorAccent"
+        />
+
 </FrameLayout>

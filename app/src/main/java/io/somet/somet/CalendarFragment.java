@@ -1,16 +1,30 @@
 package io.somet.somet;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
+
+import java.util.Date;
+
 public class CalendarFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+
+    MaterialCalendarView widget;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -29,7 +43,10 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_calendar, container, false);
+        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
+        widget = (MaterialCalendarView) view.findViewById(R.id.calendarView);
+        widget.addDecorators(new OneDayDecorator());
+        return view;
     }
 
     public void onButtonPressed(Uri uri) {
@@ -57,5 +74,33 @@ public class CalendarFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    public class OneDayDecorator implements DayViewDecorator {
+
+        private CalendarDay date;
+
+        public OneDayDecorator() {
+            date = CalendarDay.today();
+        }
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return date != null && day.equals(date);
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            view.addSpan(new StyleSpan(Typeface.BOLD));
+            view.addSpan(new RelativeSizeSpan(1.4f));
+            view.addSpan(new DotSpan(getResources().getColor(R.color.colorAccent)));
+        }
+
+        /**
+         * We're changing the internals, so make sure to call {@linkplain MaterialCalendarView#invalidateDecorators()}
+         */
+        public void setDate(Date date) {
+            this.date = CalendarDay.from(date);
+        }
     }
 }

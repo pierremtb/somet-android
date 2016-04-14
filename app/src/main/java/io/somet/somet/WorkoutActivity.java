@@ -299,13 +299,13 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void settleWorkout() {
-        workout = MainActivity.getMap(MeteorSingleton.getInstance().getDatabase().getCollection("workouts").getDocument(wk_id));
+        workout = Tools.getMap(MeteorSingleton.getInstance().getDatabase().getCollection("workouts").getDocument(wk_id));
         System.out.println(workout);
 
-        setText(R.id.openedWkDuration , MainActivity.dispDuration(workout.get("duration")));
+        setText(R.id.openedWkDuration , Tools.dispDuration(workout.get("duration")));
         setText(R.id.openedWkDescription, workout.get("description"));
         setText(R.id.openedWkComments, workout.get("comments"));
-        setText(R.id.openedWkDate, MainActivity.dispDate(workout.get("start_date")));
+        setText(R.id.openedWkDate, Tools.dispDate(workout.get("start_date")));
 
         getSupportActionBar().setTitle(workout.get("title").toString());
         HashMap<String, Object> fit_values = (HashMap<String, Object>) workout.get("fit_values");
