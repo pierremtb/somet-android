@@ -45,7 +45,7 @@ public class CalendarFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         widget = (MaterialCalendarView) view.findViewById(R.id.calendarView);
-        widget.addDecorators(new OneDayDecorator());
+        widget.addDecorators(new OneDayDecorator(), new OneDayDecorator());
         return view;
     }
 
@@ -93,7 +93,6 @@ public class CalendarFragment extends Fragment {
         public void decorate(DayViewFacade view) {
             view.addSpan(new StyleSpan(Typeface.BOLD));
             view.addSpan(new RelativeSizeSpan(1.4f));
-            view.addSpan(new DotSpan(getResources().getColor(R.color.colorAccent)));
         }
 
         /**

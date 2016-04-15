@@ -21,7 +21,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     OnFragmentInteractionListener Main;
 
-    HashMap<String, Object> last_wk = new HashMap<>();
+    Workout last_wk;
 
     TextView wkDetailsButton, lastWkTitle, lastWkDescription, lastWkDuration, lastWkDate;
 
@@ -75,10 +75,15 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.otherWks:
+                Main.toast("auinerstauie");
+                Main.openWorkouts();
+                break;
             case R.id.lastWkDetails:
-                System.out.println(last_wk.get("title"));
-                Main.openWorkout(last_wk.get("_id"));
+                System.out.println(last_wk.getTitle());
+                Main.openWorkouts();
                 break;
         }
     }
@@ -91,6 +96,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         void setText(Integer id, Object txt);
 
         void openWorkout(Object id);
+
+        void openWorkouts();
 
         boolean isTrainer();
 
@@ -106,25 +113,26 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         .compareTo(Tools.getDate(o2.getField("start_date")));
             }
         });
-        last_wk = Tools.getMap(workouts[workouts.length - 1]);
+        last_wk = new Workout(workouts[workouts.length - 1]);
+        System.out.println(last_wk.toString());
         System.out.println(last_wk);
         try {
-            lastWkTitle.setText(last_wk.get("title").toString());
+            lastWkTitle.setText(last_wk.getTitle());
         } catch (Exception e) {
             lastWkTitle.setVisibility(View.GONE);
         }
         try {
-            lastWkDescription.setText(last_wk.get("description").toString());
+            lastWkDescription.setText(last_wk.getDescription());
         } catch (Exception e) {
             lastWkDescription.setVisibility(View.GONE);
         }
         try {
-            lastWkDuration.setText(Tools.dispDuration(last_wk.get("duration")));
+            lastWkDuration.setText(Tools.dispDuration(last_wk.getDuration()));
         } catch (Exception e) {
             lastWkDuration.setVisibility(View.GONE);
         }
         try {
-            lastWkDate.setText(Tools.dispDate(last_wk.get("start_date")));
+            lastWkDate.setText(Tools.dispDate(last_wk.getStartDate()));
         } catch (Exception e) {
             lastWkDate.setVisibility(View.GONE);
         }

@@ -105,6 +105,7 @@
                         android:background="?selectableItemBackgroundBorderless"
                         android:gravity="end"
                         android:padding="@dimen/cards_padding"
+                        android:clickable="true"
                         android:text="@string/more"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_ultrasmall"

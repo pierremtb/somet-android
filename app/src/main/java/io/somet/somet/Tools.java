@@ -22,6 +22,12 @@ public final class Tools{
         return obj;
     }
 
+    public static HashMap<String, Object> getMap(Object doc) {
+        HashMap<String, Object> obj = new HashMap<>();
+        obj = (HashMap<String, Object>) doc;
+        return obj;
+    }
+
     public static String dispDuration(long sec) {
         return String.format("%02d:%02d:%02d", sec / 3600, (sec % 3600) / 60, sec % 60);
     }
@@ -43,6 +49,11 @@ public final class Tools{
             timestamp = t.get("$date");
         } catch (Exception e ) {}
         Date date = new Date(timestamp);
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return formatter.format(date);
+    }
+
+    public static String dispDate(Date date) {
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         return formatter.format(date);
     }

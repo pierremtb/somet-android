@@ -294,6 +294,15 @@ public class MainActivity
         startActivityForResult(intent, 0);
     }
 
+    public void openWorkouts() {
+        Intent intent = new Intent(getApplicationContext(), WorkoutsActivity.class);
+        Bundle b = new Bundle();
+        b.putString("owner", isTrainer ? selectedAthlete : User.get("username").toString());
+        toast(isTrainer ? selectedAthlete : User.get("username").toString());
+        intent.putExtras(b);
+        startActivityForResult(intent, 0);
+    }
+
     public void openProfile() {
         Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
         startActivityForResult(intent, 0);
