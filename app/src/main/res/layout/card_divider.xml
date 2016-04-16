@@ -7,6 +7,6 @@
         android:id="@+id/cardDivider"
         android:layout_width="fill_parent"
         android:layout_height="1px"
-        android:background="@color/divider_grey"/>
+        android:background="@color/colorDivider"/>
 
 </FrameLayout>

@@ -1,5 +1,6 @@
 package io.somet.somet.activities;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ import io.somet.somet.R;
 import io.somet.somet.adapters.WorkoutsAdapter;
 import io.somet.somet.data.Workout;
 import io.somet.somet.helpers.EndlessRecyclerViewScrollListener;
+import io.somet.somet.helpers.ItemClickSupport;
 
 public class WorkoutsActivity extends AppCompatActivity {
 
@@ -159,6 +161,7 @@ public class WorkoutsActivity extends AppCompatActivity {
 
             RecyclerView rvItems = (RecyclerView) rootView.findViewById(R.id.rvWorkouts);
             final List<Workout> allWorkouts = Workout.createWorkoutsList(10, 0);
+
             final WorkoutsAdapter adapter = new WorkoutsAdapter(allWorkouts);
             rvItems.setAdapter(adapter);
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rootView.getContext());
@@ -170,6 +173,17 @@ public class WorkoutsActivity extends AppCompatActivity {
                     int curSize = adapter.getItemCount();
                     allWorkouts.addAll(moreWorkouts);
                     adapter.notifyItemRangeInserted(curSize, allWorkouts.size() - 1);
+                }
+            });
+
+            ItemClickSupport.addTo(rvItems).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                @Override
+                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                    Intent intent = new Intent(getContext(), WorkoutActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("id", allWorkouts.get(position).getId());
+                    intent.putExtras(b);
+                    startActivityForResult(intent, 0);
                 }
             });
 

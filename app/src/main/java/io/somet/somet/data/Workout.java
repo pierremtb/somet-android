@@ -64,7 +64,7 @@ public class Workout {
         HashMap<String, Object> cr = (HashMap<String, Object>) get(wk, "cr", true);
 
         this.id = (String) get(wk, "_id");
-        this.ascent = Float.valueOf(get(wk, "ascent").toString());
+        //this.ascent = Float.valueOf(get(wk, "ascent").toString());
         this.distance = Double.parseDouble(get(wk, "distance") + "");
         this.duration = Long.parseLong(String.valueOf(get(wk, "duration")));
         this.description = String.valueOf(get(wk, "description").toString());
@@ -72,7 +72,7 @@ public class Workout {
         this.owner = String.valueOf(get(wk, "owner"));
         this.startDate = Tools.getDate(get(wk, "start_date"));
         this.title = (String) get(wk, "title");
-        this.stravaId = Long.parseLong(String.valueOf(get(wk, "strava_id")));
+//        this.stravaId = Long.parseLong(String.valueOf(get(wk, "strava_id")));
         this.support = (String) get(wk, "support");
 
         if(cr.size() > 0) {

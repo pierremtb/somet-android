@@ -47,7 +47,7 @@
         <activity
             android:name=".activities.WorkoutsActivity"
             android:label="@string/title_activity_workouts"
-            android:theme="@style/AppTheme.Light" />
+            android:theme="@style/AppTheme.LightBackground" />
     </application>
 
 </manifest>

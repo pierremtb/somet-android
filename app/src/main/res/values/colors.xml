@@ -4,7 +4,13 @@
     <color name="colorPrimaryDark">#19252B</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBackground">#37474F</color>
+    <color name="colorLightBackground">#fafafa</color>
     <color name="colorLightText">#616161</color>
+    <color name="colorPrimaryText">#DE000000</color>
+    <color name="colorSecondaryText">#8A000000</color>
+    <color name="colorDisabledText">#61000000</color>
+    <color name="colorDivider">#1F000000</color>
+    <color name="colorHighlight">#40000000</color>
 
     <color name="ripple_accent">#80e91e63</color>
     <color name="cardsbg">#ffffff</color>
