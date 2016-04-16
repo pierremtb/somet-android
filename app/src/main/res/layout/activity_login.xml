@@ -3,6 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:background="@color/colorPrimary">
 
@@ -12,13 +13,13 @@
         android:orientation="vertical"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:paddingTop="56dp">
+        android:paddingTop="45dp">
 
         <ImageView
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="40dp"
             android:src="@drawable/logo" />
 
         <android.support.v7.widget.CardView
@@ -38,41 +39,29 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="@dimen/cards_padding"
-                android:paddingBottom="0dp">
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp">
 
-                <!-- Email Label -->
-                <android.support.design.widget.TextInputLayout
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/input_email"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="45dp"
+                    android:layout_marginRight="10dp"
+                    android:hint="@string/email_or_username"
+                    android:layout_marginBottom="15dp"
+                    android:layout_weight="1"
+                    app:met_iconLeft="@drawable/ic_perm_identity"/>
 
-                    <EditText
-                        android:id="@+id/input_email"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_account_circle"
-                        android:drawablePadding="10dp"
-                        android:drawableTint="#FFF"
-                        android:hint="Pseudo ou adresse email"
-                        android:inputType="textEmailAddress"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
 
-                <!-- Password Label -->
-                <android.support.design.widget.TextInputLayout
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/input_password"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/input_password"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_security"
-                        android:drawablePadding="10dp"
-                        android:drawableTint="#FFF"
-                        android:hint="Mot de passe"
-                        android:inputType="textPassword"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_height="45dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:hint="@string/password"
+                    android:layout_weight="1"
+                    app:met_iconLeft="@drawable/ic_fingerprint"/>
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/btn_login"
@@ -82,19 +71,22 @@
                     android:layout_marginTop="@dimen/cards_text_margin"
                     android:padding="12dp"
                     android:paddingBottom="0dp"
-                    android:text="Login" />
+                    android:text="@string/login"
+                    android:backgroundTint="@color/colorAccent"/>
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btn_go_signup"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginTop="@dimen/cards_text_margin"
+                    android:padding="12dp"
+                    android:paddingBottom="0dp"
+                    android:text="@string/signup"
+                    android:backgroundTint="@color/colorPrimaryDark"/>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_go_signup"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/cards_margin"
-            android:layout_marginTop="250dp"
-            android:text="Creer un compte"
-            />
     </LinearLayout>
 </ScrollView>

@@ -7,21 +7,33 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import im.delight.android.ddp.Meteor;
+import im.delight.android.ddp.MeteorCallback;
+import im.delight.android.ddp.MeteorSingleton;
+import im.delight.android.ddp.ResultListener;
 import io.somet.somet.R;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity implements MeteorCallback {
     private static final String TAG = "SignupActivity";
 
-    @InjectView(R.id.input_name) EditText _nameText;
+    private Meteor mMeteor;
+
+    @InjectView(R.id.input_complete_name) EditText _nameText;
+    @InjectView(R.id.input_username) EditText _usernameText;
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
+    @InjectView(R.id.trainerGroup)  RadioGroup _trainerGroup;
     @InjectView(R.id.btn_signup) Button _signupButton;
-    @InjectView(R.id.link_login) TextView _loginLink;
+    @InjectView(R.id.btn_go_login) TextView _loginLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,10 +51,13 @@ public class SignupActivity extends AppCompatActivity {
         _loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
                 finish();
             }
         });
+
+        mMeteor = new Meteor(this, "ws://somet.herokuapp.com/websocket");
+        mMeteor.addCallback(this);
+        mMeteor.connect();
     }
 
     public void signup() {
@@ -62,19 +77,29 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.show();
 
         String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        final String username = _usernameText.getText().toString();
+        final String email = _emailText.getText().toString();
+        final String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
+        final HashMap<String, Object> profile = new HashMap<>();
+        profile.put("complete_name", name);
+        profile.put("trainer", _trainerGroup.getCheckedRadioButtonId() == R.id.trainer_type);
 
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
+                        mMeteor.registerAndLogin(username, email, password, profile, new ResultListener() {
+                            @Override
+                            public void onSuccess(String result) {
+                                onSignupSuccess();
+                                progressDialog.dismiss();
+                            }
+
+                            @Override
+                            public void onError(String error, String reason, String details) {
+                                onSignupFailed();
+                            }
+                        });
                     }
                 }, 3000);
     }
@@ -121,5 +146,35 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+    @Override
+    public void onConnect(boolean signedInAutomatically) {
+
+    }
+
+    @Override
+    public void onDisconnect() {
+
+    }
+
+    @Override
+    public void onException(Exception e) {
+
+    }
+
+    @Override
+    public void onDataAdded(String collectionName, String documentID, String newValuesJson) {
+
+    }
+
+    @Override
+    public void onDataChanged(String collectionName, String documentID, String updatedValuesJson, String removedValuesJson) {
+
+    }
+
+    @Override
+    public void onDataRemoved(String collectionName, String documentID) {
+
     }
 }

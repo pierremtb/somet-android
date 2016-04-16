@@ -1,26 +1,21 @@
 package io.somet.somet.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,11 +27,8 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 
 import im.delight.android.ddp.Meteor;
@@ -46,9 +38,6 @@ import im.delight.android.ddp.SubscribeListener;
 import im.delight.android.ddp.db.Document;
 import im.delight.android.ddp.db.memory.InMemoryDatabase;
 import io.somet.somet.R;
-import io.somet.somet.activities.ProfileActivity;
-import io.somet.somet.activities.WorkoutActivity;
-import io.somet.somet.activities.WorkoutsActivity;
 import io.somet.somet.fragments.AnalysisFragment;
 import io.somet.somet.fragments.CalendarFragment;
 import io.somet.somet.fragments.DashboardFragment;

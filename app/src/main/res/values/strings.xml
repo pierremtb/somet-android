@@ -138,4 +138,13 @@
     <string name="addEvent">Ajouter un événement</string>
     <string name="notYetAvailable">Pas encore disponible.</string>
     <string name="edit">Modifier</string>
+    <string name="signup">Créer un compte</string>
+    <string name="login">Connexion</string>
+    <string name="email_or_username">Email ou pseudo</string>
+    <string name="password">Mot de passe</string>
+    <string name="complete_name">Nom complet</string>
+    <string name="email">Addresse mail</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="trainer">Entraineur</string>
+    <string name="athlete">Athlete</string>
 </resources>

@@ -125,26 +125,30 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         .compareTo(Tools.getDate(o2.getField("start_date")));
             }
         });
-        last_wk = new Workout(workouts[workouts.length - 1]);
-        try {
-            lastWkTitle.setText(last_wk.getTitle());
-        } catch (Exception e) {
-            lastWkTitle.setVisibility(View.GONE);
-        }
-        try {
-            lastWkDescription.setText(last_wk.getDescription());
-        } catch (Exception e) {
-            lastWkDescription.setVisibility(View.GONE);
-        }
-        try {
-            lastWkDuration.setText(Tools.dispDuration(last_wk.getDuration()));
-        } catch (Exception e) {
-            lastWkDuration.setVisibility(View.GONE);
-        }
-        try {
-            lastWkDate.setText(Tools.dispDate(last_wk.getStartDate()));
-        } catch (Exception e) {
-            lastWkDate.setVisibility(View.GONE);
+        if(workouts.length > 0) {
+            last_wk = new Workout(workouts[workouts.length - 1]);
+            try {
+                lastWkTitle.setText(last_wk.getTitle());
+            } catch (Exception e) {
+                lastWkTitle.setVisibility(View.GONE);
+            }
+            try {
+                lastWkDescription.setText(last_wk.getDescription());
+            } catch (Exception e) {
+                lastWkDescription.setVisibility(View.GONE);
+            }
+            try {
+                lastWkDuration.setText(Tools.dispDuration(last_wk.getDuration()));
+            } catch (Exception e) {
+                lastWkDuration.setVisibility(View.GONE);
+            }
+            try {
+                lastWkDate.setText(Tools.dispDate(last_wk.getStartDate()));
+            } catch (Exception e) {
+                lastWkDate.setVisibility(View.GONE);
+            }
+        } else {
+            Main.toast("Pas de dernier entrainement");
         }
     }
 
@@ -157,24 +161,29 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         .compareTo(Tools.getDate(o2.getField("monday_date")));
             }
         });
-        today_pl = new Plan(plans[0]);
 
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        if(plans.length > 0) {
+            today_pl = new Plan(plans[0]);
 
-        if(c.getTime().getDay() == today_pl.getMondayDate().getDay() && c.getTime().getMonth() == today_pl.getMondayDate().getMonth() && c.getTime().getYear() == today_pl.getMondayDate().getYear()) {
-            Calendar t = Calendar.getInstance();
-            int index = t.get(Calendar.DAY_OF_WEEK);
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
-            todayPlDescription.setText(today_pl.getDays().get(index - 2).get("description"));
-            todayPlDuration.setText(Tools.dispDuration(today_pl.getDays().get(index - 2).get("duration")));
-            todayPlType.setText(Tools.dispType(today_pl.getDays().get(index - 2).get("type")));
-            todayPlSupport.setText(Tools.dispSupport(today_pl.getDays().get(index - 2).get("support")));
+            if (c.getTime().getDay() == today_pl.getMondayDate().getDay() && c.getTime().getMonth() == today_pl.getMondayDate().getMonth() && c.getTime().getYear() == today_pl.getMondayDate().getYear()) {
+                Calendar t = Calendar.getInstance();
+                int index = t.get(Calendar.DAY_OF_WEEK);
+
+                todayPlDescription.setText(today_pl.getDays().get(index - 2).get("description"));
+                todayPlDuration.setText(Tools.dispDuration(today_pl.getDays().get(index - 2).get("duration")));
+                todayPlType.setText(Tools.dispType(today_pl.getDays().get(index - 2).get("type")));
+                todayPlSupport.setText(Tools.dispSupport(today_pl.getDays().get(index - 2).get("support")));
+            } else {
+                todayPlDescription.setText("Pas de plan cette semaine");
+                todayPlSupport.setVisibility(View.GONE);
+                todayPlDuration.setVisibility(View.GONE);
+                todayPlType.setVisibility(View.GONE);
+            }
         } else {
-            todayPlDescription.setText("Pas de plan cette semaine");
-            todayPlSupport.setVisibility(View.GONE);
-            todayPlDuration.setVisibility(View.GONE);
-            todayPlType.setVisibility(View.GONE);
+            Main.toast("Pas de plan pour cette semaine");
         }
     }
 }
