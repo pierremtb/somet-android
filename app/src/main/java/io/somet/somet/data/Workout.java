@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.data;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -6,11 +6,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.db.Document;
+import io.somet.somet.helpers.Tools;
 
 public class Workout {
     private String id;
-    private int ascent;
+    private float ascent;
     private int crEffort;
     private int crMood;
     private int crPleasure;
@@ -64,8 +66,8 @@ public class Workout {
         HashMap<String, Object> cr = (HashMap<String, Object>) get(wk, "cr", true);
 
         this.id = (String) get(wk, "_id");
-        this.ascent = Integer.valueOf(get(wk, "ascent").toString());
-        this.distance = (double) get(wk, "distance");
+        this.ascent = Float.valueOf(get(wk, "ascent").toString());
+        this.distance = Double.parseDouble(get(wk, "distance") + "");
         this.duration = Long.parseLong(String.valueOf(get(wk, "duration")));
         this.description = String.valueOf(get(wk, "description").toString());
         this.comments = String.valueOf(get(wk, "comments"));
@@ -152,7 +154,7 @@ public class Workout {
         return id;
     }
 
-    public int getAscent() {
+    public float getAscent() {
         return ascent;
     }
 
@@ -309,10 +311,13 @@ public class Workout {
     public static List<Workout> createWorkoutsList(int numWorkouts, int offset) {
         List<Workout> Workouts = new ArrayList<Workout>();
 
-        for (int i = 1; i <= numWorkouts; i++) {
-            //Workouts.add(new Workout("Person " + ++lastWorkoutId + " offset: " + offset, i <= numWorkouts / 2));
+        Document[] workoutsDocs = MeteorSingleton.getInstance().getDatabase().getCollection("workouts").find(numWorkouts, offset);
+
+        for (Document wk:workoutsDocs) {
+            Workouts.add(new Workout(wk));
         }
 
+        System.out.println(Workouts.get(0));
         return Workouts;
     }
 

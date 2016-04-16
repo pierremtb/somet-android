@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.activities;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -35,6 +35,9 @@ import java.util.HashMap;
 
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.SubscribeListener;
+import io.somet.somet.R;
+import io.somet.somet.helpers.Tools;
+import io.somet.somet.data.Workout;
 
 public class WorkoutActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.somet.somet.R;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";

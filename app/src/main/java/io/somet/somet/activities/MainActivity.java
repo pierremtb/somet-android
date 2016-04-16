@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -44,6 +44,13 @@ import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.SubscribeListener;
 import im.delight.android.ddp.db.Document;
 import im.delight.android.ddp.db.memory.InMemoryDatabase;
+import io.somet.somet.R;
+import io.somet.somet.activities.ProfileActivity;
+import io.somet.somet.activities.WorkoutActivity;
+import io.somet.somet.activities.WorkoutsActivity;
+import io.somet.somet.fragments.AnalysisFragment;
+import io.somet.somet.fragments.CalendarFragment;
+import io.somet.somet.fragments.DashboardFragment;
 
 public class MainActivity
         extends AppCompatActivity

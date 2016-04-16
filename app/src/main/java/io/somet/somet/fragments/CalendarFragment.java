@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.fragments;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -19,6 +19,8 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.Date;
+
+import io.somet.somet.R;
 
 public class CalendarFragment extends Fragment {
 

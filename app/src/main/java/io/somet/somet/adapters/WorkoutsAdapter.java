@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +19,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
+
+import io.somet.somet.R;
+import io.somet.somet.data.*;
+import io.somet.somet.helpers.Tools;
 
 // Create the basic adapter extending from RecyclerView.Adapter
 // Note that we specify the custom ViewHolder which gives us access to our views
@@ -38,8 +42,7 @@ public class WorkoutsAdapter extends
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public TextView nameTextView;
-        public Button messageButton;
+        public TextView workoutTitle, workoutDate;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -48,8 +51,8 @@ public class WorkoutsAdapter extends
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            //nameTextView = (TextView) itemView.findViewById(R.id.workout_name);
-            //messageButton = (Button) itemView.findViewById(R.id.message_button);
+            workoutTitle = (TextView) itemView.findViewById(R.id.workoutTitle);
+            workoutDate = (TextView) itemView.findViewById(R.id.workoutDate);
         }
     }
 
@@ -58,7 +61,7 @@ public class WorkoutsAdapter extends
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View workoutView = inflater.inflate(R.layout.content_main, parent, false);
+        View workoutView = inflater.inflate(R.layout.item_workout, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(workoutView);
         return viewHolder;
@@ -68,10 +71,11 @@ public class WorkoutsAdapter extends
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         Workout workout = workouts.get(position);
 
-        TextView textView = viewHolder.nameTextView;
-        textView.setText(workout.getTitle());
+        TextView workoutTitle = viewHolder.workoutTitle;
+        workoutTitle.setText(workout.getTitle());
 
-        Button button = viewHolder.messageButton;
+        TextView workoutDate = viewHolder.workoutDate;
+        workoutDate.setText(Tools.dispDate(workout.getStartDate()));
     }
 
     @Override

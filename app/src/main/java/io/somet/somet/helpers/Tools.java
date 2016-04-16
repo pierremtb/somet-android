@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.helpers;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -65,5 +65,28 @@ public final class Tools{
             timestamp = t.get("$date");
         } catch (Exception e ) {}
         return new Date(timestamp);
+    }
+
+    public static String dispType(String t) {
+        switch (t) {
+            case "wk": return "Entrainement";
+            case "rc": return "Compétition";
+            case "nth": return "Repos";
+            default: return "";
+        }
+    }
+
+    public static String dispSupport(String s) {
+        switch (s) {
+            case "mtb": return "VTT";
+            case "road": return "Route";
+            case "run": return "Course à pied";
+            case "ht": return "Home Trainer";
+            case "swim": return "Natation";
+            case "skix": return "Ski de fond";
+            case "endr": return "Enduro";
+            case "othr": return "Autre";
+            default: return "";
+        }
     }
 }

@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.data;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import im.delight.android.ddp.db.Document;
+import io.somet.somet.helpers.Tools;
 
 public class Plan {
     private String id;

@@ -1,8 +1,10 @@
-package io.somet.somet;
+package io.somet.somet.activities;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -21,6 +23,13 @@ import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.content.res.Resources.Theme;
 
 import android.widget.TextView;
+
+import java.util.List;
+
+import io.somet.somet.R;
+import io.somet.somet.adapters.WorkoutsAdapter;
+import io.somet.somet.data.Workout;
+import io.somet.somet.helpers.EndlessRecyclerViewScrollListener;
 
 public class WorkoutsActivity extends AppCompatActivity {
 
@@ -168,8 +177,23 @@ public class WorkoutsActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_workouts, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            RecyclerView rvItems = (RecyclerView) rootView.findViewById(R.id.rvWorkouts);
+            final List<Workout> allWorkouts = Workout.createWorkoutsList(10, 0);
+            final WorkoutsAdapter adapter = new WorkoutsAdapter(allWorkouts);
+            rvItems.setAdapter(adapter);
+            final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rootView.getContext());
+            rvItems.setLayoutManager(linearLayoutManager);
+            rvItems.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                @Override
+                public void onLoadMore(int page, int totalItemsCount) {
+                    List<Workout> moreWorkouts = Workout.createWorkoutsList(10, page);
+                    int curSize = adapter.getItemCount();
+                    allWorkouts.addAll(moreWorkouts);
+                    adapter.notifyItemRangeInserted(curSize, allWorkouts.size() - 1);
+                }
+            });
+
             return rootView;
         }
     }

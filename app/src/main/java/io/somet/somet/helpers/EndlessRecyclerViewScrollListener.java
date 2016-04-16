@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.helpers;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;

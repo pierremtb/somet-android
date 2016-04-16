@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +16,10 @@ import java.util.HashMap;
 
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.db.Document;
+import io.somet.somet.data.Plan;
+import io.somet.somet.R;
+import io.somet.somet.helpers.Tools;
+import io.somet.somet.data.Workout;
 
 public class DashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -150,6 +154,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     public void setTodayPlCard() {
         Document[] plans = MeteorSingleton.getInstance().getDatabase().getCollection("plans").whereEqual("owner", (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"))).find();
+        System.out.println(new Plan(plans[0]));
         Arrays.sort(plans, new Comparator<Document>() {
             @Override
             public int compare(Document o1, Document o2) {
@@ -157,19 +162,22 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         .compareTo(Tools.getDate(o2.getField("monday_date")));
             }
         });
-        today_pl = new Plan(plans[plans.length - 1]);
+        today_pl = new Plan(plans[0]);
 
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
-        if(c.getTime() == today_pl.getMondayDate()) {
+        System.out.println(c.getTime());
+        System.out.println(today_pl.getMondayDate());
+
+        if(c.getTime().getDay() == today_pl.getMondayDate().getDay() && c.getTime().getMonth() == today_pl.getMondayDate().getMonth() && c.getTime().getYear() == today_pl.getMondayDate().getYear()) {
             Calendar t = Calendar.getInstance();
             int index = t.get(Calendar.DAY_OF_WEEK);
 
-            todayPlDescription.setText(today_pl.getDays().get(index).get("description"));
-            todayPlDuration.setText(today_pl.getDays().get(index).get("duration"));
-            todayPlType.setText(today_pl.getDays().get(index).get("type"));
-            todayPlSupport.setText(today_pl.getDays().get(index).get("support"));
+            todayPlDescription.setText(today_pl.getDays().get(index - 2).get("description"));
+            todayPlDuration.setText(Tools.dispDuration(today_pl.getDays().get(index - 2).get("duration")));
+            todayPlType.setText(Tools.dispType(today_pl.getDays().get(index - 2).get("type")));
+            todayPlSupport.setText(Tools.dispSupport(today_pl.getDays().get(index - 2).get("support")));
         } else {
             todayPlDescription.setText("Pas de plan cette semaine");
             todayPlSupport.setVisibility(View.GONE);

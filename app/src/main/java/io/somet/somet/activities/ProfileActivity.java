@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 import java.util.HashMap;
 
 import im.delight.android.ddp.MeteorSingleton;
+import io.somet.somet.R;
+import io.somet.somet.helpers.Tools;
 
 public class ProfileActivity extends AppCompatActivity {
 

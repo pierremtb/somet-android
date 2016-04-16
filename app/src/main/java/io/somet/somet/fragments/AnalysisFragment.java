@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -15,6 +15,9 @@ import java.util.HashMap;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.SubscribeListener;
 import im.delight.android.ddp.db.Document;
+import io.somet.somet.activities.MainActivity;
+import io.somet.somet.R;
+import io.somet.somet.helpers.Tools;
 
 public class AnalysisFragment extends Fragment {
 

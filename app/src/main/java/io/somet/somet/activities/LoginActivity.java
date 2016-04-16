@@ -1,4 +1,4 @@
-package io.somet.somet;
+package io.somet.somet.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -22,6 +22,7 @@ import im.delight.android.ddp.MeteorCallback;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.ResultListener;
 import im.delight.android.ddp.db.memory.InMemoryDatabase;
+import io.somet.somet.R;
 
 public class LoginActivity extends AppCompatActivity implements MeteorCallback {
     private static final String TAG = "LoginActivity";
