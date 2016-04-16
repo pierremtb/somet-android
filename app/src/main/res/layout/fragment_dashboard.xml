@@ -159,7 +159,43 @@
                 android:textSize="@dimen/text_big" />
 
             <TextView
-                android:id="@+id/thisWeekPlDescription"
+                android:id="@+id/todayPlType"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingBottom="@dimen/cards_text_margin"
+                android:paddingLeft="@dimen/cards_padding"
+                android:paddingRight="@dimen/cards_padding"
+                android:text="@string/loading_text"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/todayPlSupport"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingBottom="@dimen/cards_text_margin"
+                android:paddingLeft="@dimen/cards_padding"
+                android:paddingRight="@dimen/cards_padding"
+                android:text="@string/loading_text"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/todayPlDuration"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingBottom="@dimen/cards_text_margin"
+                android:paddingLeft="@dimen/cards_padding"
+                android:paddingRight="@dimen/cards_padding"
+                android:text="@string/loading_text"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_small" />
+
+            <TextView
+                android:id="@+id/todayPlDescription"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.2"

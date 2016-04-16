@@ -24,7 +24,7 @@
 
     <!-- Dashboard -->
     <string name="dashboard_last_wk_title">Dernier entrainement</string>
-    <string name="dashboard_this_week_pl_title">Plan de la semaine</string>
+    <string name="dashboard_this_week_pl_title">Que faire aujourd\'hui</string>
     <string name="title_activity_workout">WorkoutActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>

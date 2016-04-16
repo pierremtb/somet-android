@@ -51,7 +51,6 @@ public class MainActivity
             DashboardFragment.OnFragmentInteractionListener,
             CalendarFragment.OnFragmentInteractionListener,
             AnalysisFragment.OnFragmentInteractionListener,
-            ProfileFragment.OnFragmentInteractionListener,
             ActionBar.OnNavigationListener{
 
     private static final int REQUEST_LOGIN = 0;
@@ -271,13 +270,6 @@ public class MainActivity
         Fragment AnalysisFG = new AnalysisFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, AnalysisFG);
-        ft.commit();
-    }
-
-    public void showProfile() {
-        Fragment ProfileFG = new ProfileFragment();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame, ProfileFG);
         ft.commit();
     }
 

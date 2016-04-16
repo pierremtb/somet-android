@@ -52,6 +52,8 @@ public class Workout {
     public Workout(Document workoutDoc) {
         HashMap<String, Object> wk = Tools.getMap(workoutDoc);
         HashMap<String, Object> fit = (HashMap<String, Object>) get(wk, "fit_values", true);
+        System.out.println(wk);
+        System.out.println(fit);
         HashMap<String, Object> time = (HashMap<String, Object>) get(fit, "time", true);
         HashMap<String, Object> distance = (HashMap<String, Object>) get(fit, "distance", true);
         HashMap<String, Object> power = (HashMap<String, Object>) get(fit, "power", true);
@@ -80,8 +82,9 @@ public class Workout {
             this.crSensations = Integer.valueOf(get(cr, "sensations").toString());
         }
 
+        this.fitLinked = Boolean.getBoolean(get(wk, "fit_linked").toString());
+
         if(fit.size() > 0) {
-            this.fitLinked = true;
             this.fitSport = String.valueOf(get(fit, "sport"));
             this.fitCalories = Long.valueOf(get(fit, "calories").toString());
 
