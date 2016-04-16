@@ -57,7 +57,6 @@ public class WorkoutActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         wk_id = b.getString("id");
         workout = new Workout(MeteorSingleton.getInstance().getDatabase().getCollection("workouts").getDocument(wk_id));
-        System.out.println(workout);
 
         setContentView(R.layout.activity_workout);
 
@@ -360,9 +359,7 @@ public class WorkoutActivity extends AppCompatActivity {
     public void setText(Integer id, Object txt) {
         try {
             ((TextView) getWindow().findViewById(id)).setText(txt.toString());
-        } catch (Exception e ) {
-            System.out.println(e.toString());
-        }
+        } catch (Exception e ) { }
     }
 
     public void toast(String str) {

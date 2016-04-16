@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -76,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements MeteorCallback {
         loadingDialog = new MaterialDialog.Builder(this)
                 .content(R.string.please_wait)
                 .progress(true, 0)
+                .theme(Theme.LIGHT)
                 .show();
 
         final String email = _emailText.getText().toString();
@@ -137,7 +139,6 @@ public class LoginActivity extends AppCompatActivity implements MeteorCallback {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         Intent intent = getIntent();
-        System.out.println("success");
         setResult(RESULT_OK, intent);
         loadingDialog.dismiss();
         finish();

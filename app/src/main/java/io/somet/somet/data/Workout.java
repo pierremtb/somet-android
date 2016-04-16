@@ -54,8 +54,6 @@ public class Workout {
     public Workout(Document workoutDoc) {
         HashMap<String, Object> wk = Tools.getMap(workoutDoc);
         HashMap<String, Object> fit = (HashMap<String, Object>) get(wk, "fit_values", true);
-        System.out.println(wk);
-        System.out.println(fit);
         HashMap<String, Object> time = (HashMap<String, Object>) get(fit, "time", true);
         HashMap<String, Object> distance = (HashMap<String, Object>) get(fit, "distance", true);
         HashMap<String, Object> power = (HashMap<String, Object>) get(fit, "power", true);
@@ -317,36 +315,26 @@ public class Workout {
             Workouts.add(new Workout(wk));
         }
 
-        System.out.println(Workouts.get(0));
         return Workouts;
     }
 
     public String toString() {
         StringBuilder result = new StringBuilder();
         String newLine = System.getProperty("line.separator");
-
         result.append( this.getClass().getName() );
         result.append( " Object {" );
         result.append(newLine);
-
-        //determine fields declared in this class only (no fields of superclass)
         Field[] fields = this.getClass().getDeclaredFields();
-
-        //print field names paired with their values
         for ( Field field : fields  ) {
             result.append("  ");
             try {
                 result.append( field.getName() );
                 result.append(": ");
-                //requires access to private field:
                 result.append( field.get(this) );
-            } catch ( IllegalAccessException ex ) {
-                System.out.println(ex);
-            }
+            } catch ( IllegalAccessException ex ) {  }
             result.append(newLine);
         }
         result.append("}");
-
         return result.toString();
     }
 }

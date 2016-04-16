@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
@@ -142,6 +143,7 @@ public class MainActivity
 
         loadingDialog = new MaterialDialog.Builder(this)
                 .content(R.string.please_wait)
+                .theme(Theme.LIGHT)
                 .progress(true, 0)
                 .show();
     }
@@ -297,7 +299,6 @@ public class MainActivity
         Intent intent = new Intent(getApplicationContext(), WorkoutsActivity.class);
         Bundle b = new Bundle();
         b.putString("owner", isTrainer ? selectedAthlete : User.get("username").toString());
-        toast(isTrainer ? selectedAthlete : User.get("username").toString());
         intent.putExtras(b);
         startActivityForResult(intent, 0);
     }
@@ -343,7 +344,6 @@ public class MainActivity
         User.put("username", user_doc.getField("username"));
         subscribed = true;
         HashMap<String, Object> pro = (HashMap<String, Object>) user_doc.getField("profile");
-        System.out.println(pro);
         if(pro.containsKey("trainer"))
             if(((Boolean) pro.get("trainer")))
                 isTrainer = true;
@@ -381,8 +381,6 @@ public class MainActivity
         for (Document athlete : athletes) {
             athletesOfTrainer.add(athlete.getField("username").toString());
         }
-        System.out.println("AAAA");
-        System.out.println(athletesOfTrainer);
         selectedAthlete = athletesOfTrainer.size() > 0 ? athletesOfTrainer.get(0) : "";
     }
 
@@ -399,6 +397,7 @@ public class MainActivity
     public static void startLoadingDialog(Context context) {
         loadingDialog = new MaterialDialog.Builder(context)
             .content(R.string.please_wait)
+            .theme(Theme.LIGHT)
             .progress(true, 0)
             .show();
     }
@@ -407,10 +406,6 @@ public class MainActivity
         loadingDialog.dismiss();
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;

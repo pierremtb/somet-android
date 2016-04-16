@@ -133,4 +133,9 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_workouts">WorkoutsActivity</string>
+    <string name="action_sort">Trier</string>
+    <string name="close">Fermer</string>
+    <string name="addEvent">Ajouter un événement</string>
+    <string name="notYetAvailable">Pas encore disponible.</string>
+    <string name="edit">Modifier</string>
 </resources>

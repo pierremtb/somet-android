@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="io.somet.somet.ProfileActivity"
+    tools:context="io.somet.somet.activities.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
     <LinearLayout
@@ -56,6 +56,7 @@
                         android:id="@+id/profileUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorLightText"
                         android:layout_marginLeft="10dp"
                         android:text="\@username" />
 
@@ -75,6 +76,7 @@
                     <TextView
                         android:id="@+id/profileEmail"
                         android:layout_width="wrap_content"
+                        android:textColor="@color/colorLightText"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="pierrejacquier39\@gmail.com" />
@@ -95,6 +97,7 @@
                     <TextView
                         android:id="@+id/profileWeight"
                         android:layout_width="wrap_content"
+                        android:textColor="@color/colorLightText"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="67kg" />
@@ -115,6 +118,7 @@
                     <TextView
                         android:id="@+id/profileHeight"
                         android:layout_width="wrap_content"
+                        android:textColor="@color/colorLightText"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="172cm" />
@@ -166,6 +170,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
+                        android:textColor="@color/colorLightText"
                         android:text="Trainer Name (\@username)" />
 
                 </LinearLayout>
@@ -211,6 +216,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorLightText"
                         android:layout_marginLeft="10dp"
                         android:text="Athlete Name (\@username)" />
 
@@ -231,6 +237,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
+                        android:textColor="@color/colorLightText"
                         android:text="Athlete Name (\@username)" />
 
                 </LinearLayout>
@@ -277,6 +284,7 @@
                     <TextView
                         android:id="@+id/profileStravaLink"
                         android:layout_width="wrap_content"
+                        android:textColor="@color/colorLightText"
                         android:layout_height="wrap_content"
                         android:linksClickable="true"
                         android:autoLink="all"

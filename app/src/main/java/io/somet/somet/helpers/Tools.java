@@ -89,4 +89,20 @@ public final class Tools{
             default: return "";
         }
     }
+
+    public static String getString(HashMap<String, ?> obj, String key) {
+        return obj.containsKey(key) ? String.valueOf(obj.get(key)) : "";
+    }
+
+    public static int getInt(HashMap<String, ?> obj, String key) {
+        return obj.containsKey(key) ? Integer.valueOf(obj.get(key).toString()) : 0;
+    }
+
+    public static Date getDate(HashMap<String, ?> obj, String key) {
+        return obj.containsKey(key) ? getDate(obj.get(key)) : new Date();
+    }
+
+    public static boolean getBoolean(HashMap<String, ?> obj, String key) {
+        return obj.containsKey(key) && Boolean.valueOf(obj.get(key).toString());
+    }
 }

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#37474F</color>
-    <color name="colorPrimaryDark">#263238</color>
+    <color name="colorPrimary">#263238</color>
+    <color name="colorPrimaryDark">#19252B</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorBackground">#37474F</color>
+    <color name="colorLightText">#616161</color>
+
     <color name="ripple_accent">#80e91e63</color>
     <color name="cardsbg">#ffffff</color>
     <color name="transparent">#00ffffff</color>
@@ -13,4 +16,5 @@
 
     <!-- Color for some ripples -->
     <color name="semitransparent_white">#80ffffff</color>
+    <color name="colorLightTextDarker">#424242</color>
 </resources>

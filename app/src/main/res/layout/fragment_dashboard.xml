@@ -45,7 +45,7 @@
                     android:paddingLeft="@dimen/cards_padding"
                     android:paddingRight="@dimen/cards_padding"
                     android:text="@string/loading_text"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorLightText"
                     android:textSize="@dimen/text_small" />
 
                 <TextView
@@ -57,7 +57,7 @@
                     android:paddingLeft="@dimen/cards_padding"
                     android:paddingRight="@dimen/cards_padding"
                     android:text="@string/loading_text"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorLightText"
                     android:textSize="@dimen/text_small" />
 
                 <TextView
@@ -69,7 +69,7 @@
                     android:paddingLeft="@dimen/cards_padding"
                     android:paddingRight="@dimen/cards_padding"
                     android:text="@string/loading_text"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorLightText"
                     android:textSize="@dimen/text_small" />
 
                 <TextView
@@ -81,15 +81,10 @@
                     android:paddingLeft="@dimen/cards_padding"
                     android:paddingRight="@dimen/cards_padding"
                     android:text="@string/loading_text"  
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorLightText"
                     android:textSize="@dimen/text_small" />
 
-                <View
-                    android:id="@+id/cardDivider"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1px"
-                    android:background="@color/divider_grey"
-                    android:visibility="invisible" />
+                <include layout="@layout/card_divider" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -107,7 +102,7 @@
                         android:padding="@dimen/cards_padding"
                         android:clickable="true"
                         android:text="@string/more"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorLightTextDarker"
                         android:textSize="@dimen/text_ultrasmall"
                         android:textStyle="bold" />
 
@@ -167,7 +162,7 @@
                 android:paddingLeft="@dimen/cards_padding"
                 android:paddingRight="@dimen/cards_padding"
                 android:text="@string/loading_text"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorLightText"
                 android:textSize="@dimen/text_small" />
 
             <TextView
@@ -179,7 +174,7 @@
                 android:paddingLeft="@dimen/cards_padding"
                 android:paddingRight="@dimen/cards_padding"
                 android:text="@string/loading_text"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorLightText"
                 android:textSize="@dimen/text_small" />
 
             <TextView
@@ -191,7 +186,7 @@
                 android:paddingLeft="@dimen/cards_padding"
                 android:paddingRight="@dimen/cards_padding"
                 android:text="@string/loading_text"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorLightText"
                 android:textSize="@dimen/text_small" />
 
             <TextView
@@ -203,15 +198,10 @@
                 android:paddingLeft="@dimen/cards_padding"
                 android:paddingRight="@dimen/cards_padding"
                 android:text="@string/loading_text"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorLightText"
                 android:textSize="@dimen/text_small" />
 
-            <View
-                android:id="@+id/cardPlDivider"
-                android:layout_width="fill_parent"
-                android:layout_height="1px"
-                android:background="@color/divider_grey"
-                android:visibility="invisible" />
+            <include layout="@layout/card_divider" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -229,7 +219,7 @@
                     android:gravity="end"
                     android:padding="@dimen/cards_padding"
                     android:text="@string/more"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorLightTextDarker"
                     android:textSize="@dimen/text_ultrasmall"
                     android:textStyle="bold" />
 

@@ -60,7 +60,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         todayPlSupport = (TextView) myView.findViewById(R.id.todayPlSupport);
 
         String usr = (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"));
-        System.out.println(usr);
 
         setLastWkCard();
         setTodayPlCard();
@@ -96,7 +95,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 Main.openWorkouts();
                 break;
             case R.id.lastWkDetails:
-                System.out.println(last_wk.getTitle());
                 Main.openWorkout(last_wk.getId());
                 break;
         }
@@ -128,8 +126,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         });
         last_wk = new Workout(workouts[workouts.length - 1]);
-        System.out.println(last_wk.toString());
-        System.out.println(last_wk);
         try {
             lastWkTitle.setText(last_wk.getTitle());
         } catch (Exception e) {
@@ -154,7 +150,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     public void setTodayPlCard() {
         Document[] plans = MeteorSingleton.getInstance().getDatabase().getCollection("plans").whereEqual("owner", (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"))).find();
-        System.out.println(new Plan(plans[0]));
         Arrays.sort(plans, new Comparator<Document>() {
             @Override
             public int compare(Document o1, Document o2) {
@@ -166,9 +161,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
-        System.out.println(c.getTime());
-        System.out.println(today_pl.getMondayDate());
 
         if(c.getTime().getDay() == today_pl.getMondayDate().getDay() && c.getTime().getMonth() == today_pl.getMondayDate().getMonth() && c.getTime().getYear() == today_pl.getMondayDate().getYear()) {
             Calendar t = Calendar.getInstance();
