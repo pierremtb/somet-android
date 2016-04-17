@@ -16,12 +16,15 @@ import java.util.HashMap;
 
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.db.Document;
+import io.somet.somet.Somet;
 import io.somet.somet.data.Plan;
 import io.somet.somet.R;
 import io.somet.somet.helpers.Tools;
 import io.somet.somet.data.Workout;
 
 public class DashboardFragment extends Fragment implements View.OnClickListener {
+
+    Somet app;
 
     OnFragmentInteractionListener Main;
 
@@ -36,6 +39,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app = (Somet) getActivity().getApplicationContext();
     }
 
     @Override
@@ -58,8 +62,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         todayPlDuration = (TextView) myView.findViewById(R.id.todayPlDuration);
         todayPlType = (TextView) myView.findViewById(R.id.todayPlType);
         todayPlSupport = (TextView) myView.findViewById(R.id.todayPlSupport);
-
-        String usr = (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"));
 
         setLastWkCard();
         setTodayPlCard();
@@ -103,21 +105,15 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     public interface OnFragmentInteractionListener {
         void toast(String str);
 
-        HashMap<String, Object> getUser();
-
         void setText(Integer id, Object txt);
 
         void openWorkout(Object id);
 
         void openWorkouts();
-
-        boolean isTrainer();
-
-        String getSelectedAthlete();
     }
 
     public void setLastWkCard() {
-        Document[] workouts = MeteorSingleton.getInstance().getDatabase().getCollection("workouts").whereEqual("owner", (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"))).find();
+        Document[] workouts = MeteorSingleton.getInstance().getDatabase().getCollection("workouts").whereEqual("owner", app.getTargetedUser().getUsername()).find();
         Arrays.sort(workouts, new Comparator<Document>() {
             @Override
             public int compare(Document o1, Document o2) {
@@ -153,7 +149,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     }
 
     public void setTodayPlCard() {
-        Document[] plans = MeteorSingleton.getInstance().getDatabase().getCollection("plans").whereEqual("owner", (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"))).find();
+        Document[] plans = MeteorSingleton.getInstance().getDatabase().getCollection("plans").whereEqual("owner", app.getTargetedUser().getUsername()).find();
         Arrays.sort(plans, new Comparator<Document>() {
             @Override
             public int compare(Document o1, Document o2) {
@@ -171,11 +167,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             if (c.getTime().getDay() == today_pl.getMondayDate().getDay() && c.getTime().getMonth() == today_pl.getMondayDate().getMonth() && c.getTime().getYear() == today_pl.getMondayDate().getYear()) {
                 Calendar t = Calendar.getInstance();
                 int index = t.get(Calendar.DAY_OF_WEEK);
-
-                todayPlDescription.setText(today_pl.getDays().get(index - 2).get("description"));
-                todayPlDuration.setText(Tools.dispDuration(today_pl.getDays().get(index - 2).get("duration")));
-                todayPlType.setText(Tools.dispType(today_pl.getDays().get(index - 2).get("type")));
-                todayPlSupport.setText(Tools.dispSupport(today_pl.getDays().get(index - 2).get("support")));
+                try {
+                    todayPlDescription.setText(today_pl.getDays().get(index - 1).get("description"));
+                    todayPlDuration.setText(Tools.dispDuration(today_pl.getDays().get(index - 1).get("duration")));
+                    todayPlType.setText(Tools.dispType(today_pl.getDays().get(index - 1).get("type")));
+                    todayPlSupport.setText(Tools.dispSupport(today_pl.getDays().get(index - 1).get("support")));
+                } catch (Exception e) {}
             } else {
                 todayPlDescription.setText("Pas de plan cette semaine");
                 todayPlSupport.setVisibility(View.GONE);

@@ -15,11 +15,14 @@ import java.util.HashMap;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.SubscribeListener;
 import im.delight.android.ddp.db.Document;
+import io.somet.somet.Somet;
 import io.somet.somet.activities.MainActivity;
 import io.somet.somet.R;
 import io.somet.somet.helpers.Tools;
 
 public class AnalysisFragment extends Fragment {
+
+    Somet app;
 
     OnFragmentInteractionListener Main;
 
@@ -37,6 +40,7 @@ public class AnalysisFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app = (Somet) getActivity().getApplicationContext();
     }
 
     @Override
@@ -57,7 +61,7 @@ public class AnalysisFragment extends Fragment {
     }
 
     public void setSummaryCard() {
-        Document[] workouts = MeteorSingleton.getInstance().getDatabase().getCollection("workouts").whereEqual("owner", (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"))).find();
+        Document[] workouts = MeteorSingleton.getInstance().getDatabase().getCollection("workouts").whereEqual("owner", app.getTargetedUser().getUsername()).find();
         long sum_dur = 0;
         float sum_dis = 0, sum_asc = 0, sum_des = 0, sum_cal = 0;
         for(Document wk:workouts) {
@@ -106,14 +110,8 @@ public class AnalysisFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void toast(String str);
 
-        HashMap<String, Object> getUser();
-
         void setText(Integer id, Object txt);
 
         void openWorkout(Object id);
-
-        boolean isTrainer();
-
-        String getSelectedAthlete();
     }
 }

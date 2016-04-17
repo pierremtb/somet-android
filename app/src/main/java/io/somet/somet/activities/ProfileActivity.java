@@ -15,13 +15,11 @@ import java.util.HashMap;
 
 import im.delight.android.ddp.MeteorSingleton;
 import io.somet.somet.R;
+import io.somet.somet.Somet;
 import io.somet.somet.helpers.Tools;
 
 public class ProfileActivity extends AppCompatActivity {
-
-    HashMap<String, Object> user = new HashMap<>();
-    HashMap<String, Object> profile = new HashMap<>();
-    boolean isTrainer = false, isStrava = false;
+    Somet app;
 
     CardView profileInformationsCard, profileInformationsTrainerCard, profileInformationsAthletesCard, profileInformationsStravaCard;
     TextView profileUsername, profileEmail, profileWeight, profileHeight, profileTrainerName, profileStravaLink;
@@ -30,6 +28,9 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        app = (Somet) getApplicationContext();
+
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -44,14 +45,15 @@ public class ProfileActivity extends AppCompatActivity {
         profileWeight = (TextView) findViewById(R.id.profileWeight);
         profileHeight = (TextView) findViewById(R.id.profileHeight);
 
-        prepareUserInformations();
+        profileTrainerName = (TextView) findViewById(R.id.profileTrainerName);
+
         prepareProfile();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "La modification du profil arrivera bientôt !", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -79,43 +81,37 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void prepareUserInformations() {
-        user = Tools.getMap(MeteorSingleton.getInstance().getDatabase().getCollection("users").findOne());
-        profile = (HashMap<String, Object>) user.get("profile");
-        if(profile.containsKey("trainer"))
-            if(((Boolean) profile.get("trainer")))
-                isTrainer = true;
-        if(profile.containsKey("finished_set_up") && profile.containsKey("strava_sync"))
-            if(((Boolean) profile.get("finished_set_up")))
-                isStrava = true;
-    }
-
     private void prepareProfile() {
-        if(isTrainer) {
+        if(app.getCurrentUser().isTrainer()) {
             profileInformationsAthletesCard.setVisibility(View.VISIBLE);
         }
         else {
             profileInformationsTrainerCard.setVisibility(View.VISIBLE);
+            try {
+                profileTrainerName.setText(app.getCurrentUser().getMyTrainer());
+            } catch (Exception e) {
+
+            }
         }
 
-        if(isStrava) {
+        if(app.getCurrentUser().isStravaSynced()) {
             profileInformationsStravaCard.setVisibility(View.VISIBLE);
         }
 
-        setTitle(profile.get("complete_name").toString());
+        setTitle(app.getCurrentUser().getCompleteName());
         try {
-            profileUsername.setText(String.format("@%s", user.get("username").toString()));
+            profileUsername.setText(String.format("@%s", app.getCurrentUser().getUsername()));
         } catch (Exception e) {
 
         }
         try {
-            profileEmail.setText(String.format("%s", profile.get("email").toString()));
+            profileEmail.setText(String.format("%s", app.getCurrentUser().getEmail()));
         } catch (Exception e) {}
         try {
-            profileWeight.setText(String.format("%.1fkg", Float.valueOf(profile.get("weight").toString())));
+            profileWeight.setText(String.format("%.1fkg", app.getCurrentUser().getWeight()));
         } catch (Exception e) {}
         try {
-            profileHeight.setText(String.format("%.1fcm", Float.valueOf(profile.get("height").toString())));
+            profileHeight.setText(String.format("%.1fcm", app.getCurrentUser().getHeight()));
         } catch (Exception e) {}
     }
 }

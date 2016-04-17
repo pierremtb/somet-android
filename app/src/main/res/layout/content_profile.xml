@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/cards_text_margin"
                     android:text="Informations"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/text_big" />
 
                 <LinearLayout
@@ -49,15 +49,15 @@
                     android:layout_marginTop="@dimen/cards_text_margin">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/profile_icons_size"
+                        android:layout_height="@dimen/profile_icons_size"
                         android:src="@drawable/ic_perm_identity" />
 
                     <TextView
                         android:id="@+id/profileUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorLightText"
+                        android:textColor="@color/colorSecondaryText"
                         android:layout_marginLeft="10dp"
                         android:text="\@username" />
 
@@ -70,14 +70,14 @@
                     android:layout_marginTop="@dimen/cards_text_margin">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/profile_icons_size"
+                        android:layout_height="@dimen/profile_icons_size"
                         android:src="@drawable/ic_email" />
 
                     <TextView
                         android:id="@+id/profileEmail"
                         android:layout_width="wrap_content"
-                        android:textColor="@color/colorLightText"
+                        android:textColor="@color/colorSecondaryText"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="pierrejacquier39\@gmail.com" />
@@ -91,14 +91,14 @@
                     android:layout_marginTop="@dimen/cards_text_margin">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/profile_icons_size"
+                        android:layout_height="@dimen/profile_icons_size"
                         android:src="@drawable/ic_fitness_center" />
 
                     <TextView
                         android:id="@+id/profileWeight"
                         android:layout_width="wrap_content"
-                        android:textColor="@color/colorLightText"
+                        android:textColor="@color/colorSecondaryText"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="67kg" />
@@ -112,14 +112,14 @@
                     android:layout_marginTop="@dimen/cards_text_margin">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/profile_icons_size"
+                        android:layout_height="@dimen/profile_icons_size"
                         android:src="@drawable/ic_accessibility" />
 
                     <TextView
                         android:id="@+id/profileHeight"
                         android:layout_width="wrap_content"
-                        android:textColor="@color/colorLightText"
+                        android:textColor="@color/colorSecondaryText"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="172cm" />
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/cards_text_margin"
                     android:text="Mon entraineur"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/text_big" />
 
                 <LinearLayout
@@ -162,8 +162,8 @@
                     android:layout_marginTop="@dimen/cards_text_margin">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/profile_icons_size"
+                        android:layout_height="@dimen/profile_icons_size"
                         android:src="@drawable/ic_work" />
 
                     <TextView
@@ -171,7 +171,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:textColor="@color/colorLightText"
+                        android:textColor="@color/colorSecondaryText"
                         android:text="Trainer Name (\@username)" />
 
                 </LinearLayout>
@@ -200,24 +200,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/cards_text_margin"
                     android:text="Mes athletes"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/text_big" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/profile_icons_size"
+                    android:layout_height="@dimen/profile_icons_size"
                     android:layout_marginBottom="@dimen/cards_text_margin"
                     android:layout_marginTop="@dimen/cards_text_margin">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/profile_icons_size"
+                        android:layout_height="@dimen/profile_icons_size"
                         android:src="@drawable/ic_directions_bike" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorLightText"
+                        android:textColor="@color/colorSecondaryText"
                         android:layout_marginLeft="10dp"
                         android:text="Athlete Name (\@username)" />
 
@@ -230,15 +230,15 @@
                     android:layout_marginTop="@dimen/cards_text_margin">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/profile_icons_size"
+                        android:layout_height="@dimen/profile_icons_size"
                         android:src="@drawable/ic_directions_bike" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:textColor="@color/colorLightText"
+                        android:textColor="@color/colorSecondaryText"
                         android:text="Athlete Name (\@username)" />
 
                 </LinearLayout>
@@ -268,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/cards_text_margin"
                     android:text="Connexion avec Strava"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/text_big" />
 
                 <LinearLayout
@@ -278,14 +278,14 @@
                     android:layout_marginTop="@dimen/cards_text_margin">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/profile_icons_size"
+                        android:layout_height="@dimen/profile_icons_size"
                         android:src="@drawable/ic_link" />
 
                     <TextView
                         android:id="@+id/profileStravaLink"
                         android:layout_width="wrap_content"
-                        android:textColor="@color/colorLightText"
+                        android:textColor="@color/colorSecondaryText"
                         android:layout_height="wrap_content"
                         android:linksClickable="true"
                         android:autoLink="all"

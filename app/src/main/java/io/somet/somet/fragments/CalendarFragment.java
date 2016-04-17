@@ -38,6 +38,7 @@ import java.util.List;
 import im.delight.android.ddp.MeteorSingleton;
 import im.delight.android.ddp.db.Document;
 import io.somet.somet.R;
+import io.somet.somet.Somet;
 import io.somet.somet.adapters.EventsAdapter;
 import io.somet.somet.adapters.WorkoutsAdapter;
 import io.somet.somet.data.Event;
@@ -45,6 +46,8 @@ import io.somet.somet.data.Workout;
 import io.somet.somet.helpers.Tools;
 
 public class CalendarFragment extends Fragment implements OnDateSelectedListener {
+
+    Somet app;
 
     private OnFragmentInteractionListener Main;
 
@@ -62,6 +65,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app = (Somet) getActivity().getApplicationContext();
     }
 
     @Override
@@ -74,7 +78,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         Collection<CalendarDay> secondClassEvents = new ArrayList<>();
         Collection<CalendarDay> preparationEvents = new ArrayList<>();
 
-        Document[] eventsDocs = MeteorSingleton.getInstance().getDatabase().getCollection("events").whereEqual("owner", (String) (Main.isTrainer() ? Main.getSelectedAthlete() : Main.getUser().get("username"))).find();
+        Document[] eventsDocs = MeteorSingleton.getInstance().getDatabase().getCollection("events").whereEqual("owner", app.getTargetedUser().getUsername()).find();
 
         Calendar cal = Calendar.getInstance();
 
@@ -174,17 +178,11 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
     public interface OnFragmentInteractionListener {
         void toast(String str);
 
-        HashMap<String, Object> getUser();
-
         void setText(Integer id, Object txt);
 
         void openWorkout(Object id);
 
         void openWorkouts();
-
-        boolean isTrainer();
-
-        String getSelectedAthlete();
     }
 
     public class EventDecorator implements DayViewDecorator {

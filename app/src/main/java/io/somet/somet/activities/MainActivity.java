@@ -38,6 +38,8 @@ import im.delight.android.ddp.SubscribeListener;
 import im.delight.android.ddp.db.Document;
 import im.delight.android.ddp.db.memory.InMemoryDatabase;
 import io.somet.somet.R;
+import io.somet.somet.Somet;
+import io.somet.somet.data.User;
 import io.somet.somet.fragments.AnalysisFragment;
 import io.somet.somet.fragments.CalendarFragment;
 import io.somet.somet.fragments.DashboardFragment;
@@ -50,12 +52,11 @@ public class MainActivity
             AnalysisFragment.OnFragmentInteractionListener,
             ActionBar.OnNavigationListener{
 
+    Somet app;
+
     private static final int REQUEST_LOGIN = 0;
     public Meteor meteor;
-    private HashMap<String, Object> User = new HashMap<>();
-    public boolean isTrainer = false;
-    public String selectedAthlete = "";
-    public ArrayList<String> athletesOfTrainer = new ArrayList<>();
+
     public boolean subscribed = false;
 
     public static MaterialDialog loadingDialog;
@@ -64,23 +65,16 @@ public class MainActivity
 
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
-    public boolean isTrainer() {
-        return isTrainer;
-    }
-
-    public String getSelectedAthlete() {
-        return selectedAthlete;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        app = (Somet) getApplicationContext();
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
-
-        isTrainer = false;
 
         mBottomBar = BottomBar.attach(this, savedInstanceState);
         mBottomBar.setItemsFromMenu(R.menu.bottom_bar_menu, new OnMenuTabClickListener() {
@@ -155,7 +149,6 @@ public class MainActivity
             case R.id.action_about :
                 return true;
             case R.id.action_logout:
-                isTrainer = false;
                 meteor.logout();
                 launchLogin();
                 return true;
@@ -212,7 +205,7 @@ public class MainActivity
     public boolean onNavigationItemSelected(int position, long id) {
         if(subscribed) {
             startLoadingDialog(this);
-            selectedAthlete = athletesOfTrainer.get(position);
+            app.setTargetedUser(app.getCurrentUser().getMyAthletes()[position]);
             showDashboard();
             return true;
         }
@@ -286,9 +279,6 @@ public class MainActivity
 
     public void openWorkouts() {
         Intent intent = new Intent(getApplicationContext(), WorkoutsActivity.class);
-        Bundle b = new Bundle();
-        b.putString("owner", isTrainer ? selectedAthlete : User.get("username").toString());
-        intent.putExtras(b);
         startActivityForResult(intent, 0);
     }
 
@@ -310,7 +300,12 @@ public class MainActivity
             meteor.subscribe("mainUserDataSync", new Object[]{}, new SubscribeListener() {
                 @Override
                 public void onSuccess() {
-                    setUserData();
+                    app.setCurrentUser(new User(meteor.getDatabase().getCollection("users").findOne()));
+                    if(app.getCurrentUser().isTrainer())
+                        app.setTargetedUser(app.getCurrentUser().getMyAthletes()[0]);
+                    else
+                        app.setTargetedUser(app.getCurrentUser());
+                    subscribed = true;
                     prepareActionBar();
                     showDashboard();
                 }
@@ -318,25 +313,15 @@ public class MainActivity
                 @Override
                 public void onError(String error, String reason, String details) {
                     toast(error + "-" + reason);
+                    System.out.println(details);
                 }
             });
         } else {
-            setUserData();
             prepareActionBar();
             showDashboard();
         }
     }
 
-    public void setUserData() {
-        Document user_doc = meteor.getDatabase().getCollection("users").findOne();
-        User.put("profile", user_doc.getField("profile"));
-        User.put("username", user_doc.getField("username"));
-        subscribed = true;
-        HashMap<String, Object> pro = (HashMap<String, Object>) user_doc.getField("profile");
-        if(pro.containsKey("trainer"))
-            if(((Boolean) pro.get("trainer")))
-                isTrainer = true;
-    }
 
     public ArrayAdapter<String> adapter;
 
@@ -345,15 +330,14 @@ public class MainActivity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         adapter = new ArrayAdapter<String>(actionBar.getThemedContext(),
                 android.R.layout.simple_spinner_item, android.R.id.text1,
-                athletesOfTrainer);
+                app.getCurrentUser().getMyAthletes());
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         actionBar.setListNavigationCallbacks(adapter, this);
     }
 
     public void prepareActionBar() {
-        if(isTrainer) {
-            setAthletesOfTrainer();
+        if(app.getCurrentUser().isTrainer()) {
             finishActionBar();
         } else {
             actionBar.setDisplayShowTitleEnabled(true);
@@ -364,23 +348,10 @@ public class MainActivity
         }
     }
 
-    public void setAthletesOfTrainer() {
-        Document[] athletes = meteor.getDatabase().getCollection("athletes").find();
-        athletesOfTrainer = new ArrayList<>();
-        for (Document athlete : athletes) {
-            athletesOfTrainer.add(athlete.getField("username").toString());
-        }
-        selectedAthlete = athletesOfTrainer.size() > 0 ? athletesOfTrainer.get(0) : "";
-    }
-
     public void setText(Integer id, Object txt) {
         try {
             ((TextView) findViewById(id)).setText(txt.toString());
         } catch (Exception e ) {}
-    }
-
-    public HashMap<String, Object> getUser() {
-        return User;
     }
 
     public static void startLoadingDialog(Context context) {

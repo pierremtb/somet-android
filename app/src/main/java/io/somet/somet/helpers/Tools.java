@@ -2,6 +2,7 @@ package io.somet.somet.helpers;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -98,11 +99,39 @@ public final class Tools{
         return obj.containsKey(key) ? Integer.valueOf(obj.get(key).toString()) : 0;
     }
 
+    public static float getFloat(HashMap<String, ?> obj, String key) {
+        return obj.containsKey(key) ? Float.valueOf(obj.get(key).toString()) : 0;
+    }
+
     public static Date getDate(HashMap<String, ?> obj, String key) {
         return obj.containsKey(key) ? getDate(obj.get(key)) : new Date();
     }
 
     public static boolean getBoolean(HashMap<String, ?> obj, String key) {
         return obj.containsKey(key) && Boolean.valueOf(obj.get(key).toString());
+    }
+
+    public static Object getObject(HashMap<String, ?> obj, String key) {
+        return obj.containsKey(key) ? obj.get(key) : new Object();
+    }
+
+    public static String[] getStringsArray(HashMap<String, ?> obj, String key) {
+        String[] r = {};
+        if(obj.containsKey(key)) {
+            ArrayList<String> a = (ArrayList<String>) obj.get(key);
+            return a.toArray(new String[a.size()]);
+        } else {
+          return r;
+        }
+    }
+
+    public static Object getObject(HashMap<String, ?> obj, String key, boolean json) {
+        if(obj.containsKey(key)) {
+            return obj.get(key);
+        } else if(json) {
+            return new HashMap<String, Object>();
+        } else {
+            return new Object();
+        }
     }
 }
