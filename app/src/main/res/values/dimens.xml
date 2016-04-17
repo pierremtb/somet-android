@@ -35,12 +35,15 @@
 
     <!-- Cards -->
     <dimen name="cards_padding">16dp</dimen>
+    <dimen name="cards_big_padding">24dp</dimen>
     <dimen name="cards_elevation">3dp</dimen>
     <dimen name="cards_margin">8dp</dimen>
     <dimen name="finalcard_margin">10dp</dimen>
     <dimen name="cards_text_margin">5dp</dimen>
     <dimen name="mini_margin">2dp</dimen>
-    <dimen name="card_corner_radius">4dp</dimen>
+    <dimen name="card_corner_radius">2dp</dimen>
+    <dimen name="card_big_title">24sp</dimen>
+    <dimen name="card_text">14sp</dimen>
 
     <!-- Texts Sizes -->
     <dimen name="text_big">20sp</dimen>
@@ -56,4 +59,7 @@
     <dimen name="list_tile_secondary_text">14sp</dimen>
     <dimen name="list_tile_primary_text">16sp</dimen>
     <dimen name="profile_icons_size">20dp</dimen>
+    <dimen name="card_actions_margin">8dp</dimen>
+    <dimen name="button_text_size">14sp</dimen>
+    <dimen name="buttonHeight">36dp</dimen>
 </resources>

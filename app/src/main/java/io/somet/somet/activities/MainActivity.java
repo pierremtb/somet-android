@@ -282,6 +282,19 @@ public class MainActivity
         startActivityForResult(intent, 0);
     }
 
+    public void openPlan(Object id) {
+        Intent intent = new Intent(getApplicationContext(), PlanActivity.class);
+        Bundle b = new Bundle();
+        b.putString("id", id.toString());
+        intent.putExtras(b);
+        startActivityForResult(intent, 0);
+    }
+
+    public void openPlans() {
+        Intent intent = new Intent(getApplicationContext(), WorkoutsActivity.class);
+        startActivityForResult(intent, 0);
+    }
+
     public void openProfile() {
         Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
         startActivityForResult(intent, 0);

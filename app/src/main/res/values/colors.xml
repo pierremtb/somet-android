@@ -23,4 +23,5 @@
     <!-- Color for some ripples -->
     <color name="semitransparent_white">#80ffffff</color>
     <color name="colorLightTextDarker">#424242</color>
+    <color name="colorPrimaryTextDark">#FFFFFF</color>
 </resources>

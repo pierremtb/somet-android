@@ -41,4 +41,12 @@
             android:textColor="@color/colorSecondaryText"
             android:textSize="@dimen/list_tile_secondary_text" />
         </LinearLayout>
+
+    <!--
+    <include
+        layout="@layout/card_divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />-->
+
 </RelativeLayout>

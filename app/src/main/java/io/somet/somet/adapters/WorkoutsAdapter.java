@@ -53,7 +53,7 @@ public class WorkoutsAdapter extends
         workoutTitle.setText(workout.getTitle());
 
         TextView workoutDate = viewHolder.workoutDate;
-        workoutDate.setText(Tools.dispDate(workout.getStartDate()));
+        workoutDate.setText(String.format("%s - %s - %.1fkm", Tools.dispDate(workout.getStartDate()),Tools.dispDuration(workout.getDuration()), workout.getDistance()/1000));
     }
 
     @Override

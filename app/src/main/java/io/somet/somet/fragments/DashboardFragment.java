@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     Workout last_wk;
     Plan today_pl;
 
-    TextView wkDetailsButton, lastWkTitle, lastWkDescription, lastWkDuration, lastWkDate, otherWksButton, todayPlDescription, todayPlDuration, todayPlType, todayPlSupport;
+    CardView lastWkCard, todayPlCard;
+
+    TextView lastWkTitle, lastWkDescription, lastWkDuration, lastWkDate, otherWksButton, todayPlDescription, todayPlDuration, todayPlType, todayPlSupport, otherPlsButton;
 
     public DashboardFragment() {
     }
@@ -47,21 +50,25 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                              Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        wkDetailsButton = (TextView) myView.findViewById(R.id.lastWkDetails);
-        wkDetailsButton.setOnClickListener(this);
-
+        lastWkCard = (CardView) myView.findViewById(R.id.cardLastWk);
+        lastWkCard.setOnClickListener(this);
+        todayPlCard = (CardView) myView.findViewById(R.id.cardThisWeekPl);
+        todayPlCard.setOnClickListener(this);
         otherWksButton = (TextView) myView.findViewById(R.id.otherWks);
         otherWksButton.setOnClickListener(this);
 
+        otherPlsButton = (TextView) myView.findViewById(R.id.otherPls);
+        otherPlsButton.setOnClickListener(this);
+
         lastWkTitle = (TextView) myView.findViewById(R.id.lastWkTitle);
         lastWkDescription = (TextView) myView.findViewById(R.id.lastWkDescription);
-        lastWkDuration = (TextView) myView.findViewById(R.id.lastWkDuration);
-        lastWkDate = (TextView) myView.findViewById(R.id.lastWkDate);
+        //lastWkDuration = (TextView) myView.findViewById(R.id.lastWkDuration);
+        //lastWkDate = (TextView) myView.findViewById(R.id.lastWkDate);
 
         todayPlDescription = (TextView) myView.findViewById(R.id.todayPlDescription);
-        todayPlDuration = (TextView) myView.findViewById(R.id.todayPlDuration);
+        //todayPlDuration = (TextView) myView.findViewById(R.id.todayPlDuration);
         todayPlType = (TextView) myView.findViewById(R.id.todayPlType);
-        todayPlSupport = (TextView) myView.findViewById(R.id.todayPlSupport);
+        //todayPlSupport = (TextView) myView.findViewById(R.id.todayPlSupport);
 
         setLastWkCard();
         setTodayPlCard();
@@ -96,8 +103,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             case R.id.otherWks:
                 Main.openWorkouts();
                 break;
-            case R.id.lastWkDetails:
+            case R.id.cardLastWk:
                 Main.openWorkout(last_wk.getId());
+                break;
+            case R.id.otherPls:
+                Main.openPlans();
+                break;
+            case R.id.cardThisWeekPl:
+                Main.openPlan(today_pl.getId());
                 break;
         }
     }
@@ -110,6 +123,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         void openWorkout(Object id);
 
         void openWorkouts();
+
+        void openPlan(Object id);
+
+        void openPlans();
     }
 
     public void setLastWkCard() {
@@ -124,7 +141,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         if(workouts.length > 0) {
             last_wk = new Workout(workouts[workouts.length - 1]);
             try {
-                lastWkTitle.setText(last_wk.getTitle());
+                lastWkTitle.setText(last_wk.getTitle() + " - " + Tools.dispDuration(last_wk.getDuration()) + " - " + Tools.dispDate(last_wk.getStartDate()));
             } catch (Exception e) {
                 lastWkTitle.setVisibility(View.GONE);
             }
@@ -133,7 +150,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             } catch (Exception e) {
                 lastWkDescription.setVisibility(View.GONE);
             }
-            try {
+           /* try {
                 lastWkDuration.setText(Tools.dispDuration(last_wk.getDuration()));
             } catch (Exception e) {
                 lastWkDuration.setVisibility(View.GONE);
@@ -142,7 +159,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 lastWkDate.setText(Tools.dispDate(last_wk.getStartDate()));
             } catch (Exception e) {
                 lastWkDate.setVisibility(View.GONE);
-            }
+            }*/
         } else {
             Main.toast("Pas de dernier entrainement");
         }
@@ -169,9 +186,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 int index = t.get(Calendar.DAY_OF_WEEK);
                 try {
                     todayPlDescription.setText(today_pl.getDays().get(index - 1).get("description"));
-                    todayPlDuration.setText(Tools.dispDuration(today_pl.getDays().get(index - 1).get("duration")));
+                    //todayPlDuration.setText(Tools.dispDuration(today_pl.getDays().get(index - 1).get("duration")));
                     todayPlType.setText(Tools.dispType(today_pl.getDays().get(index - 1).get("type")));
-                    todayPlSupport.setText(Tools.dispSupport(today_pl.getDays().get(index - 1).get("support")));
+                    //todayPlSupport.setText(Tools.dispSupport(today_pl.getDays().get(index - 1).get("support")));
                 } catch (Exception e) {}
             } else {
                 todayPlDescription.setText("Pas de plan cette semaine");

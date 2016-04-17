@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="workouts_sort_options">
+        <item>Titre</item>
+        <item>Date</item>
+        <item>Durée</item>
+        <item>Distance</item>
+    </string-array>
+
+    <string-array name="workouts_sort_options_fields">
+        <item>title</item>
+        <item>start_date</item>
+        <item>duration</item>
+        <item>distance</item>
+    </string-array>
+
+</resources>

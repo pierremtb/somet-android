@@ -2,6 +2,8 @@ package io.somet.somet.data;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -306,13 +308,49 @@ public class Workout {
 
     private static int lastWorkoutId = 0;
 
-    public static List<Workout> createWorkoutsList(int numWorkouts, int offset) {
+    public static List<Workout> createWorkoutsList(int numWorkouts, int offset, final String fieldSorting, final int sortingOrder) {
         List<Workout> Workouts = new ArrayList<Workout>();
 
-        Document[] workoutsDocs = MeteorSingleton.getInstance().getDatabase().getCollection("workouts").find(numWorkouts, offset);
+        Document[] workoutsDocs = MeteorSingleton.getInstance().getDatabase().getCollection("workouts").find();
 
-        for (Document wk:workoutsDocs) {
-            Workouts.add(new Workout(wk));
+
+        System.out.println(fieldSorting);
+
+        Arrays.sort(workoutsDocs, new Comparator<Document>() {
+            @Override
+            public int compare(Document o1, Document o2) {
+                switch (fieldSorting) {
+                    case "start_date": {
+                        Date o1v = (new Workout(o1)).getStartDate(), o2v = (new Workout(o2).getStartDate());
+                        return sortingOrder == -1 ? o2v.compareTo(o1v) : o1v.compareTo(o2v);
+                    }
+                    case "title": {
+                        String o1v = (new Workout(o1)).getTitle(), o2v = (new Workout(o2).getTitle());
+                        return sortingOrder == -1 ? o1v.compareTo(o2v) : o2v.compareTo(o1v);
+                    }
+                    case "duration": {
+                        Long o1v = (new Workout(o1)).getDuration(), o2v = (new Workout(o2).getDuration());
+                        return sortingOrder == -1 ? o2v.compareTo(o1v) : o1v.compareTo(o2v);
+                    }
+                    case "distance": {
+                        Double o1v = (new Workout(o1)).getDistance(), o2v = (new Workout(o2).getDistance());
+                        return sortingOrder == -1 ? o2v.compareTo(o1v) : o1v.compareTo(o2v);
+                    }
+                    default: {
+                        Date o1v = (new Workout(o1)).getStartDate(), o2v = (new Workout(o2).getStartDate());
+                        return sortingOrder == -1 ? o2v.compareTo(o1v) : o1v.compareTo(o2v);
+                    }
+                }
+            }
+        });
+
+        if(numWorkouts < 0 || numWorkouts > workoutsDocs.length)
+            numWorkouts = workoutsDocs.length;
+        if(offset < 0 || offset > workoutsDocs.length)
+            offset = 0;
+
+        for (int i=offset; i<numWorkouts; i++){
+            Workouts.add(new Workout(workoutsDocs[i]));
         }
 
         return Workouts;

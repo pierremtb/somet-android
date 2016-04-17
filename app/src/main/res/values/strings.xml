@@ -147,4 +147,17 @@
     <string name="username">Nom d\'utilisateur</string>
     <string name="trainer">Entraineur</string>
     <string name="athlete">Athlete</string>
+    <string name="clear_selection">Vider séléction</string>
+    <string name="choose">Choisir</string>
+    <string name="action_sort_by">Cible du tri</string>
+    <string name="ascending">Croissant</string>
+    <string name="descending">Décroissant</string>
+    <string name="action_sort_direction">Sens du tri</string>
+    <string name="title_activity_plan">PlanActivity</string>
+    <string name="rest">Repos</string>
+    <string name="see_totals">Voir les totaux</string>
+    <string name="totals">Totaux</string>
+    <string name="what_today">Que faire aujourd\'hui</string>
+    <string name="plans_list">Liste des plans</string>
+    <string name="workouts_list">Liste des entrainements</string>
 </resources>

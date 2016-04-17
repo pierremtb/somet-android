@@ -1,0 +1,113 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    tools:context="io.somet.somet.activities.PlanActivity$OpenedPlanDayFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/dayPlCard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/cards_margin"
+            card_view:cardBackgroundColor="@color/cardsbg"
+            card_view:cardCornerRadius="@dimen/card_corner_radius"
+            card_view:cardElevation="@dimen/cards_elevation">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/cards_padding"
+                android:paddingTop="@dimen/cards_big_padding"
+                android:paddingBottom="@dimen/cards_big_padding"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/dayPlType"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_text"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="@dimen/card_big_title" />
+
+                <TextView
+                    android:id="@+id/dayPlSupport"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_text"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="@dimen/card_text" />
+
+                <TextView
+                    android:id="@+id/dayPlDuration"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_text"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="@dimen/card_text" />
+
+                <TextView
+                    android:id="@+id/dayPlDescription"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_text"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="@dimen/card_text" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/rest_view"
+            android:layout_height="wrap_content"
+            android:paddingTop="80dp"
+            android:paddingBottom="50dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:src="@drawable/ic_weekend"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:text="@string/rest"
+                android:textColor="@color/colorPrimaryTextDark"/>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>
+
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="io.somet.somet.WorkoutActivity$PlaceholderFragment">
+
+    <TextView
+        android:id="@+id/section_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>-->
