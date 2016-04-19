@@ -291,7 +291,7 @@ public class MainActivity
     }
 
     public void openPlans() {
-        Intent intent = new Intent(getApplicationContext(), WorkoutsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PlansActivity.class);
         startActivityForResult(intent, 0);
     }
 

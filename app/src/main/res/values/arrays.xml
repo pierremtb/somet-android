@@ -15,4 +15,16 @@
         <item>distance</item>
     </string-array>
 
+    <string-array name="plans_sort_options">
+        <item>Titre</item>
+        <item>Date</item>
+        <item>Durée totale</item>
+    </string-array>
+
+    <string-array name="plans_sort_options_fields">
+        <item>title</item>
+        <item>start_date</item>
+        <item>total_duration</item>%
+    </string-array>
+
 </resources>

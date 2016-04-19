@@ -50,6 +50,10 @@
             android:label="@string/title_activity_workouts"
             android:theme="@style/AppTheme.LightBackground" />
         <activity
+            android:name=".activities.PlansActivity"
+            android:label="@string/title_activity_plans"
+            android:theme="@style/AppTheme.LightBackground" />
+        <activity
             android:name=".activities.PlanActivity"
             android:label="@string/title_activity_plan"></activity>
     </application>

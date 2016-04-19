@@ -103,6 +103,10 @@ public final class Tools{
         return obj.containsKey(key) ? Float.valueOf(obj.get(key).toString()) : 0;
     }
 
+    public static long getLong(HashMap<String, ?> obj, String key) {
+        return obj.containsKey(key) ? Long.valueOf(String.valueOf(obj.get(key).toString())) : 0;
+    }
+
     public static Date getDate(HashMap<String, ?> obj, String key) {
         return obj.containsKey(key) ? getDate(obj.get(key)) : new Date();
     }

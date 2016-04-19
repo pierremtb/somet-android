@@ -160,4 +160,6 @@
     <string name="what_today">Que faire aujourd\'hui</string>
     <string name="plans_list">Liste des plans</string>
     <string name="workouts_list">Liste des entrainements</string>
+    <string name="title_activity_plans">Plans</string>
+    <string name="target_all_time">Toutes les activités</string>
 </resources>
