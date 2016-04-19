@@ -7,6 +7,7 @@ import im.delight.android.ddp.db.Document;
 import io.somet.somet.helpers.Tools;
 
 public class User {
+    private String id;
     private String username;
     private String completeName;
     private boolean trainer;
@@ -21,6 +22,7 @@ public class User {
         HashMap<String, Object> user = Tools.getMap(userDoc);
         HashMap<String, Object> profile = (HashMap<String, Object>) Tools.getObject(user, "profile", true);
 
+        this.id = Tools.getString(user, "_id");
         this.username = Tools.getString(user, "username");
         this.completeName = Tools.getString(profile, "complete_name");
         this.trainer = Tools.getBoolean(profile, "trainer");
@@ -34,6 +36,10 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getCompleteName() {

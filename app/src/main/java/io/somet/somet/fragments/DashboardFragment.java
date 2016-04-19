@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     Workout last_wk;
     Plan today_pl;
 
-    CardView lastWkCard, todayPlCard;
+    LinearLayout lastWkCard, todayPlCard;
 
     TextView lastWkTitle, lastWkDescription, lastWkDuration, lastWkDate, otherWksButton, todayPlDescription, todayPlDuration, todayPlType, todayPlSupport, otherPlsButton;
 
@@ -50,9 +51,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                              Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        lastWkCard = (CardView) myView.findViewById(R.id.cardLastWk);
+        lastWkCard = (LinearLayout) myView.findViewById(R.id.cardLastWk);
         lastWkCard.setOnClickListener(this);
-        todayPlCard = (CardView) myView.findViewById(R.id.cardThisWeekPl);
+        todayPlCard = (LinearLayout) myView.findViewById(R.id.cardThisWeekPl);
         todayPlCard.setOnClickListener(this);
         otherWksButton = (TextView) myView.findViewById(R.id.otherWks);
         otherWksButton.setOnClickListener(this);

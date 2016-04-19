@@ -40,4 +40,5 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.android.support:support-v13:23.3.0'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.5.0'
+    compile 'com.balysv:material-ripple:1.0.2'
 }

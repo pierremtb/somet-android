@@ -13,6 +13,7 @@ public class Plan {
     private String id;
     private String owner;
     private String title;
+    private String eventId;
     private Date mondayDate;
     private long totalDuration;
     private ArrayList<HashMap<String, String>> days;
@@ -22,6 +23,7 @@ public class Plan {
         this.id = String.valueOf(get(pl, "_id"));
         this.owner = String.valueOf(get(pl, "owner"));
         this.title = String.valueOf(get(pl, "title"));
+        this.eventId = String.valueOf(get(pl, "eventId"));
         this.mondayDate = Tools.getDate(get(pl, "monday_date"));
         this.totalDuration = Long.parseLong(String.valueOf(get(pl, "total_duration")));
         this.days = (ArrayList<HashMap<String, String>>) get(pl, "days");
@@ -39,6 +41,10 @@ public class Plan {
         } else {
             return new Object();
         }
+    }
+
+    public String getEventId() {
+        return eventId;
     }
 
     public String getId() {

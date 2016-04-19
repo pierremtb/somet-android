@@ -153,7 +153,7 @@ public class MainActivity
                 launchLogin();
                 return true;
             case R.id.action_profile:
-                openProfile();
+                openProfile(app.getCurrentUser().getUsername());
                 return true;
         }
 
@@ -295,8 +295,11 @@ public class MainActivity
         startActivityForResult(intent, 0);
     }
 
-    public void openProfile() {
+    public void openProfile(String username) {
         Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        Bundle b = new Bundle();
+        b.putString("username", username);
+        intent.putExtras(b);
         startActivityForResult(intent, 0);
     }
 
